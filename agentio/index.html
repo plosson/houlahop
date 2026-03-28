@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentIO — One CLI for all your agent integrations</title>
+  <meta name="description" content="A CLI that gives LLM agents access to Gmail, Slack, JIRA, Telegram, and more. Authenticate once, run anywhere.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: #fafafa;
+      --color-surface: #ffffff;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #6b6b6b;
+      --color-text-tertiary: #999;
+      --color-border: #e5e5e5;
+      --color-accent: #e8553d;
+      --color-accent-soft: #fef0ed;
+      --color-code-bg: #f5f5f5;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+      --max-width: 960px;
+      --radius: 12px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .back-link:hover {
+      color: var(--color-text);
+    }
+
+    header nav a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    header nav a:hover {
+      color: var(--color-text);
+    }
+
+    /* ---- Main ---- */
+    main {
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 32px 100px;
+      flex: 1;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      text-align: center;
+      padding: 48px 0 56px;
+    }
+
+    .hero-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+      margin-bottom: 14px;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ---- Sections ---- */
+    section {
+      margin-bottom: 56px;
+    }
+
+    section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .prose {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    .prose + .prose {
+      margin-top: 12px;
+    }
+
+    /* ---- Services table ---- */
+    .services-table {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .services-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .services-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--color-code-bg);
+      font-weight: 500;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .services-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text-secondary);
+    }
+
+    .services-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .services-table td:first-child {
+      font-weight: 500;
+      color: var(--color-text);
+    }
+
+    .services-table code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: var(--color-code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* ---- Features grid ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ---- Code block ---- */
+    .code-block {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .code-block-header {
+      padding: 10px 16px;
+      background: var(--color-code-bg);
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .code-block pre {
+      padding: 16px;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .code-block code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+
+    .copy-btn {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .copy-btn:hover {
+      background: var(--color-border);
+      color: var(--color-text);
+    }
+
+    .copy-btn.copied {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: white;
+    }
+
+    /* ---- Steps ---- */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      background: var(--color-accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-content p {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .step-content pre {
+      background: var(--color-code-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+    }
+
+    .step-content code {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--color-text);
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      margin-top: auto;
+      padding: 32px;
+      text-align: center;
+      color: var(--color-text-tertiary);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    footer a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--color-text);
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      header {
+        padding: 20px 20px;
+      }
+
+      main {
+        padding: 0 20px 60px;
+      }
+
+      .hero {
+        padding: 32px 0 40px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .services-table {
+        overflow-x: auto;
+      }
+
+      footer {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../" class="back-link">&larr; houlahop</a>
+    <nav>
+      <a href="https://github.com/plosson/agentio" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <img src="../assets/logos/agentio.png" alt="AgentIO logo" class="hero-icon">
+      <h1>AgentIO</h1>
+      <p>One CLI to connect your agents to the services you actually use.</p>
+    </section>
+
+    <section>
+      <h2>Why I built this</h2>
+      <p class="prose">
+        My agents needed to interact with real services. Read emails, check calendars, update JIRA tickets, post to Slack. Pretty basic stuff. But each service had its own auth flow, its own CLI, its own way of storing credentials. Setting up a new workflow meant juggling half a dozen tools just to get authenticated.
+      </p>
+      <p class="prose">
+        I wanted one tool that handles all of it. Authenticate once on my laptop, export an encrypted config, and use it anywhere -- GitHub Actions, CI/CD, a cron job on a server. No servers to manage, no Zapier in the middle. Just a binary that speaks JSON and works in a pipeline.
+      </p>
+    </section>
+
+    <section>
+      <h2>What it does</h2>
+      <p class="prose">
+        AgentIO is a CLI that gives LLM agents access to Gmail, Slack, JIRA, Telegram, Google Chat, Discourse, and RSS feeds. You authenticate locally (OAuth opens in your browser), then export your credentials as a single AES-256-GCM encrypted file. Import that file anywhere and your agent has access to everything.
+      </p>
+      <p class="prose">
+        All output is structured text, designed for LLMs to parse. It reads from stdin so agents can pipe content directly. No runtime dependencies -- it's a single binary.
+      </p>
+    </section>
+
+    <section>
+      <h2>Supported services</h2>
+      <div class="services-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Auth</th>
+              <th>Capabilities</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Gmail</td>
+              <td>OAuth</td>
+              <td><code>list</code> <code>get</code> <code>search</code> <code>send</code> <code>reply</code> <code>archive</code></td>
+            </tr>
+            <tr>
+              <td>Slack</td>
+              <td>Webhook</td>
+              <td><code>send</code></td>
+            </tr>
+            <tr>
+              <td>Telegram</td>
+              <td>Bot Token</td>
+              <td><code>send</code></td>
+            </tr>
+            <tr>
+              <td>Google Chat</td>
+              <td>Webhook / OAuth</td>
+              <td><code>send</code> <code>list</code> <code>get</code></td>
+            </tr>
+            <tr>
+              <td>JIRA</td>
+              <td>OAuth</td>
+              <td><code>projects</code> <code>search</code> <code>get</code> <code>comment</code> <code>transition</code></td>
+            </tr>
+            <tr>
+              <td>Discourse</td>
+              <td>API Key</td>
+              <td><code>list</code> <code>get</code> <code>categories</code></td>
+            </tr>
+            <tr>
+              <td>RSS</td>
+              <td>None</td>
+              <td><code>articles</code> <code>get</code> <code>info</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>LLM-friendly output</h3>
+          <p>Structured text output that agents can parse reliably. No guessing formats.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Stdin support</h3>
+          <p>Pipe content directly into commands. Works naturally with LLM-generated text.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Portable encrypted config</h3>
+          <p>One file + one key. AES-256-GCM encryption. Store in CI/CD secrets and go.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Multi-profile</h3>
+          <p>Multiple accounts per service. Switch between work and personal with a flag.</p>
+        </div>
+        <div class="feature-card">
+          <h3>No dependencies</h3>
+          <p>Single binary. No runtime. No Docker. Just download and run.</p>
+        </div>
+        <div class="feature-card">
+          <h3>CI/CD ready</h3>
+          <p>Built for GitHub Actions and automated pipelines. Import config from env vars.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Get started</h2>
+
+      <div class="code-block" style="margin-bottom: 28px;">
+        <div class="code-block-header">
+          Install
+          <button class="copy-btn" onclick="copyCommand(this, 'curl -LsSf https://agentio.me/install | sh')">Copy</button>
+        </div>
+        <pre><code>curl -LsSf https://agentio.me/install | sh</code></pre>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Authenticate locally</h3>
+            <p>Add your accounts. OAuth flows open in the browser.</p>
+            <pre><code>agentio gmail profile add
+agentio slack profile add
+agentio jira profile add</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Export your config</h3>
+            <p>Credentials are encrypted and bundled into a single file.</p>
+            <pre><code>agentio config export
+# Outputs: agentio.config + encryption key</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Use in GitHub Actions</h3>
+            <p>Store the config and key as secrets. Your agent takes it from there.</p>
+            <pre><code>env:
+  AGENTIO_CONFIG: ${{ secrets.AGENTIO_CONFIG }}
+  AGENTIO_KEY: ${{ secrets.AGENTIO_KEY }}
+
+steps:
+  - run: curl -LsSf https://agentio.me/install | sh
+  - run: agentio config import
+  - run: agentio gmail list --limit 10</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 houlahop &middot; <a href="https://github.com/plosson">GitHub</a></p>
+  </footer>
+
+  <script>
+    function copyCommand(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>

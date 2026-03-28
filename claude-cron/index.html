@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Cron — Your AI assistant, on autopilot</title>
+  <meta name="description" content="A native macOS app that schedules Claude Code prompts to run automatically. Set a schedule, pick a project, let Claude do the work.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: #fafafa;
+      --color-surface: #ffffff;
+      --color-text: #1a1a1a;
+      --color-text-secondary: #6b6b6b;
+      --color-text-tertiary: #999;
+      --color-border: #e5e5e5;
+      --color-accent: #e8553d;
+      --color-accent-soft: #fef0ed;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+      --max-width: 960px;
+      --radius: 12px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    header {
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .back-link:hover {
+      color: var(--color-text);
+    }
+
+    nav a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    nav a:hover {
+      color: var(--color-text);
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 32px 40px;
+      text-align: center;
+    }
+
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.08;
+      margin-bottom: 14px;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--color-text-secondary);
+      max-width: 460px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ---- Content sections ---- */
+    .content {
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .section p {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ---- Features grid ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+      max-width: none;
+    }
+
+    .feature-icon {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ---- Get started ---- */
+    .get-started-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .get-started-box p {
+      margin-bottom: 16px;
+    }
+
+    .get-started-box code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 3px 8px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .get-started-note {
+      font-size: 0.8rem;
+      color: var(--color-text-tertiary);
+      margin-top: 12px;
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      margin-top: auto;
+      padding: 32px;
+      text-align: center;
+      color: var(--color-text-tertiary);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    footer a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--color-text);
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      header {
+        padding: 20px 20px;
+      }
+
+      .hero {
+        padding: 32px 20px 28px;
+      }
+
+      .content {
+        padding: 0 20px 60px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .get-started-box {
+        padding: 24px;
+      }
+
+      footer {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="../" class="back-link">&larr; houlahop</a>
+    <nav>
+      <a href="https://github.com/plosson/claude-cron" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <img class="hero-icon" src="../assets/logos/claude-cron.png" alt="Claude Cron logo">
+    <h1>Claude Cron</h1>
+    <p>Your AI assistant, on autopilot.</p>
+  </section>
+
+  <div class="content">
+
+    <div class="section">
+      <h2>Why I built this</h2>
+      <p>I kept opening terminals to run the same Claude Code prompts. Check this repo. Review that PR. Summarize those emails. Every time, the same ritual: open a terminal, type the prompt, wait, read the output.</p>
+      <p style="margin-top: 12px;">I wanted to set it and forget it. Like a cron job, but for Claude. One fun tool to schedule Claude Code runs periodically and let it work while I do something else — or while I sleep. So I built a native macOS app to do exactly that.</p>
+    </div>
+
+    <div class="section">
+      <h2>What it does</h2>
+      <p>Claude Cron is a native macOS menu bar app that schedules Claude Code prompts to run automatically. It uses launchd under the hood — the same system macOS uses for its own scheduled tasks.</p>
+      <p style="margin-top: 12px;">You create a task, write what you want Claude to do, pick a project directory, choose your model, set a schedule (daily, weekly, monthly, or a custom interval), and let it run. Every execution is logged. You can review what Claude did, what it found, and continue the conversation where it left off.</p>
+    </div>
+
+    <div class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <span class="feature-icon">&#xF8FF;</span>
+          <h3>Native macOS app</h3>
+          <p>Built with SwiftUI. Feels right at home on your Mac. No Electron, no web views.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#x23F0;</span>
+          <h3>Flexible scheduling</h3>
+          <p>Daily, weekly, monthly, or every N minutes. Uses launchd so tasks run even when the app is closed.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#x1F9E0;</span>
+          <h3>Model selection</h3>
+          <p>Pick the right model for the job. Haiku for quick checks, Sonnet for everyday work, Opus for deep analysis.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#x1F6E1;</span>
+          <h3>Permission control</h3>
+          <p>Decide what Claude can do. Read-only, plan mode, accept edits, or full bypass. You set the guardrails.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#x1F4CB;</span>
+          <h3>Run history</h3>
+          <p>Every execution is recorded with full output, timing, and status. Debug failures or continue a session.</p>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">&#x1F504;</span>
+          <h3>Auto-updates</h3>
+          <p>Built-in update mechanism via Sparkle. Stay current without thinking about it.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Get started</h2>
+      <div class="get-started-box">
+        <p>Download the latest DMG from GitHub Releases and drag Claude Cron to your Applications folder. Requires macOS 14.0 or later and the Claude Code CLI installed.</p>
+        <a href="https://github.com/plosson/claude-cron/releases/latest" class="btn" target="_blank" rel="noopener">Download latest release</a>
+        <p class="get-started-note">Make sure <code>claude</code> is available in your PATH before creating your first task.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 houlahop &middot; <a href="https://github.com/plosson">GitHub</a></p>
+  </footer>
+
+</body>
+</html>
