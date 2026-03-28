@@ -142,37 +142,37 @@
       max-width: 640px;
     }
 
-    /* ---- Features grid ---- */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+    /* ---- FAQ ---- */
+    .faq-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .feature-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 24px;
+    .faq-item:last-child {
+      border-bottom: none;
     }
 
-    .feature-card h3 {
-      font-size: 0.95rem;
+    .faq-item h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
       font-weight: 600;
       margin-bottom: 6px;
     }
 
-    .feature-card p {
-      font-size: 0.85rem;
+    .faq-item p {
+      font-size: 0.9rem;
       color: var(--color-text-secondary);
-      line-height: 1.55;
+      line-height: 1.6;
       max-width: none;
     }
 
-    .feature-icon {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
-      display: block;
+    .faq-item code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 2px 6px;
     }
 
     /* ---- Get started ---- */
@@ -251,10 +251,6 @@
         padding: 0 20px 60px;
       }
 
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
       .get-started-box {
         padding: 24px;
       }
@@ -295,46 +291,58 @@
     </div>
 
     <div class="section">
-      <h2>Features</h2>
-      <div class="features-grid">
+      <h2>How it works</h2>
 
-        <div class="feature-card">
-          <span class="feature-icon">&#xF8FF;</span>
-          <h3>Native macOS app</h3>
-          <p>Built with SwiftUI. Feels right at home on your Mac. No Electron, no web views.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-icon">&#x23F0;</span>
-          <h3>Flexible scheduling</h3>
-          <p>Daily, weekly, monthly, or every N minutes. Uses launchd so tasks run even when the app is closed.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-icon">&#x1F9E0;</span>
-          <h3>Model selection</h3>
-          <p>Pick the right model for the job. Haiku for quick checks, Sonnet for everyday work, Opus for deep analysis.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-icon">&#x1F6E1;</span>
-          <h3>Permission control</h3>
-          <p>Decide what Claude can do. Read-only, plan mode, accept edits, or full bypass. You set the guardrails.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-icon">&#x1F4CB;</span>
-          <h3>Run history</h3>
-          <p>Every execution is recorded with full output, timing, and status. Debug failures or continue a session.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-icon">&#x1F504;</span>
-          <h3>Auto-updates</h3>
-          <p>Built-in update mechanism via Sparkle. Stay current without thinking about it.</p>
-        </div>
-
+      <div class="faq-item">
+        <h3>How do I run a Claude prompt automatically on a schedule?</h3>
+        <p>Install Claude Cron, create a task with your prompt and a schedule, and it runs via <code>launchd</code> in the background -- even when the app is closed.</p>
       </div>
+
+      <div class="faq-item">
+        <h3>How do I create my first task?</h3>
+        <p>Click the + button, give your task a name, write what you want Claude to do, pick a project directory, and set a schedule. That's it.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>What schedule types can I choose -- daily, weekly, custom?</h3>
+        <p>Daily, weekly, monthly, every N minutes, or manual. You can also set a specific time of day for daily and weekly tasks.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I pick which Claude model to use?</h3>
+        <p>Yes. Choose Haiku for quick checks, Sonnet for everyday work, or Opus for deep analysis. Each task can use a different model.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I control what Claude is allowed to do?</h3>
+        <p>Each task has a permission mode: default, plan (read-only analysis), accept edits, or full bypass. You can also configure allowed and disallowed tool lists.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can a task resume a previous conversation?</h3>
+        <p>Yes. You can set a task to resume the last session or fork from it, so Claude picks up right where it left off.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>How do I see what happened during a run?</h3>
+        <p>Every run is recorded with full output, timing, and status. Click any run in the history to review what Claude did or debug failures.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Is there a quick way to check tasks from the menu bar?</h3>
+        <p>Yes. Claude Cron lives in your menu bar, giving you a quick glance at task status and recent runs without opening the full app.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Can I define tasks inside a project so they live with the code?</h3>
+        <p>Yes. Tasks can be scoped to a specific project directory, so they stay alongside your code and can be shared with your team.</p>
+      </div>
+
+      <div class="faq-item">
+        <h3>Does Claude Cron update itself?</h3>
+        <p>It uses Sparkle for automatic updates. You'll get notified when a new version is available and can update with one click.</p>
+      </div>
+
     </div>
 
     <div class="section">

@@ -146,79 +146,35 @@
       margin-top: 12px;
     }
 
-    /* ---- Services table ---- */
-    .services-table {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .services-table table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
-
-    .services-table th {
-      text-align: left;
-      padding: 12px 16px;
-      background: var(--color-code-bg);
-      font-weight: 500;
-      font-size: 0.75rem;
-      color: var(--color-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
+    /* ---- FAQ items ---- */
+    .faq-item {
+      padding: 20px 0;
       border-bottom: 1px solid var(--color-border);
     }
 
-    .services-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--color-border);
-      color: var(--color-text-secondary);
-    }
-
-    .services-table tr:last-child td {
+    .faq-item:last-child {
       border-bottom: none;
     }
 
-    .services-table td:first-child {
-      font-weight: 500;
-      color: var(--color-text);
-    }
-
-    .services-table code {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      background: var(--color-code-bg);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    /* ---- Features grid ---- */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .feature-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-
-    .feature-card h3 {
-      font-size: 0.95rem;
+    .faq-item h3 {
+      font-family: var(--font-sans);
       font-weight: 600;
+      font-size: 1rem;
       margin-bottom: 6px;
     }
 
-    .feature-card p {
-      font-size: 0.85rem;
+    .faq-item p {
       color: var(--color-text-secondary);
-      line-height: 1.55;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .faq-item code {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      background: var(--color-code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
     /* ---- Code block ---- */
@@ -365,17 +321,9 @@
         padding: 32px 0 40px;
       }
 
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
       .step {
         flex-direction: column;
         gap: 10px;
-      }
-
-      .services-table {
-        overflow-x: auto;
       }
 
       footer {
@@ -422,83 +370,67 @@
     </section>
 
     <section>
-      <h2>Supported services</h2>
-      <div class="services-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th>Auth</th>
-              <th>Capabilities</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Gmail</td>
-              <td>OAuth</td>
-              <td><code>list</code> <code>get</code> <code>search</code> <code>send</code> <code>reply</code> <code>archive</code></td>
-            </tr>
-            <tr>
-              <td>Slack</td>
-              <td>Webhook</td>
-              <td><code>send</code></td>
-            </tr>
-            <tr>
-              <td>Telegram</td>
-              <td>Bot Token</td>
-              <td><code>send</code></td>
-            </tr>
-            <tr>
-              <td>Google Chat</td>
-              <td>Webhook / OAuth</td>
-              <td><code>send</code> <code>list</code> <code>get</code></td>
-            </tr>
-            <tr>
-              <td>JIRA</td>
-              <td>OAuth</td>
-              <td><code>projects</code> <code>search</code> <code>get</code> <code>comment</code> <code>transition</code></td>
-            </tr>
-            <tr>
-              <td>Discourse</td>
-              <td>API Key</td>
-              <td><code>list</code> <code>get</code> <code>categories</code></td>
-            </tr>
-            <tr>
-              <td>RSS</td>
-              <td>None</td>
-              <td><code>articles</code> <code>get</code> <code>info</code></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section>
-      <h2>Features</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>LLM-friendly output</h3>
-          <p>Structured text output that agents can parse reliably. No guessing formats.</p>
+      <h2>How it works</h2>
+      <div>
+        <div class="faq-item">
+          <h3>How do I read my emails from the command line?</h3>
+          <p>Run <code>agentio gmail list --limit 10</code> to see your recent emails. Add a profile first with <code>agentio gmail profile add</code> — it opens OAuth in your browser.</p>
         </div>
-        <div class="feature-card">
-          <h3>Stdin support</h3>
-          <p>Pipe content directly into commands. Works naturally with LLM-generated text.</p>
+        <div class="faq-item">
+          <h3>How do I search for specific emails?</h3>
+          <p>Use <code>agentio gmail search --query "from:boss@company.com is:unread"</code>. It supports the same query syntax as Gmail.</p>
         </div>
-        <div class="feature-card">
-          <h3>Portable encrypted config</h3>
-          <p>One file + one key. AES-256-GCM encryption. Store in CI/CD secrets and go.</p>
+        <div class="faq-item">
+          <h3>Can I send an email too?</h3>
+          <p>Yes. <code>echo "message body" | agentio gmail send --to user@example.com --subject "Daily Report"</code>. The body comes from stdin, which works great with LLM-generated text.</p>
         </div>
-        <div class="feature-card">
-          <h3>Multi-profile</h3>
-          <p>Multiple accounts per service. Switch between work and personal with a flag.</p>
+        <div class="faq-item">
+          <h3>What about Slack — can I post messages there?</h3>
+          <p>Yes. Set up a webhook with <code>agentio slack profile add</code>, then <code>agentio slack send "Deployment complete"</code>. You can also send rich Block Kit messages with <code>--json</code>.</p>
         </div>
-        <div class="feature-card">
-          <h3>No dependencies</h3>
-          <p>Single binary. No runtime. No Docker. Just download and run.</p>
+        <div class="faq-item">
+          <h3>And Telegram?</h3>
+          <p>Same pattern. Add a bot token with <code>agentio telegram profile add</code>, then <code>agentio telegram send "Alert: New items found"</code>. Supports markdown formatting too.</p>
         </div>
-        <div class="feature-card">
-          <h3>CI/CD ready</h3>
-          <p>Built for GitHub Actions and automated pipelines. Import config from env vars.</p>
+        <div class="faq-item">
+          <h3>What other services does it support?</h3>
+          <p>Gmail, Slack, Telegram, Google Chat, JIRA, Discourse, and RSS feeds. Each one follows the same <code>agentio &lt;service&gt; &lt;command&gt;</code> pattern.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How does authentication work?</h3>
+          <p>Run <code>agentio &lt;service&gt; profile add</code> on your laptop. OAuth services open in your browser, others prompt for a token or API key. Credentials are stored locally.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What if I have multiple accounts — work and personal?</h3>
+          <p>Use named profiles. <code>agentio gmail profile add --profile work</code>, then <code>agentio gmail list --profile work</code>. You can have as many profiles as you need per service.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I pipe content into a command?</h3>
+          <p>Yes, all send commands read from stdin. <code>echo "Generated by my agent" | agentio slack send</code> works naturally with LLM output.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do I get this running on a schedule?</h3>
+          <p>Use a GitHub Actions workflow with a <code>cron</code> trigger. Export your config with <code>agentio config export</code>, store it as a secret, and import it in CI with <code>agentio config import</code>.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do my credentials get into GitHub Actions securely?</h3>
+          <p>Your config is encrypted with AES-256-GCM. Store <code>AGENTIO_CONFIG</code> (base64 of the file) and <code>AGENTIO_KEY</code> as GitHub secrets. <code>agentio config import</code> auto-detects them from env vars.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I read Google Docs, Sheets, Calendar?</h3>
+          <p>Google Chat is supported with <code>send</code>, <code>list</code>, and <code>get</code>. Docs, Sheets, and Calendar are not supported yet.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I interact with JIRA — search issues, comment, transition?</h3>
+          <p>Yes. <code>agentio jira search --project MYPROJ --status "In Progress"</code>, <code>agentio jira comment PROJ-123 "update"</code>, and <code>agentio jira transition PROJ-123 &lt;id&gt;</code>. Full JQL queries are supported too.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I read RSS feeds?</h3>
+          <p>Yes. <code>agentio rss articles https://example.com --limit 10</code> auto-discovers the feed URL. Use <code>--since 2025-01-01</code> to filter by date.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use this directly inside Claude Code?</h3>
+          <p>Yes. Run <code>agentio claude install</code> to add skills for Gmail, Slack, JIRA, and more. Then just ask Claude to read your emails or post to Slack — it uses the installed skills directly.</p>
         </div>
       </div>
     </section>

@@ -143,30 +143,27 @@
       margin-top: 12px;
     }
 
-    /* ---- Feature grid ---- */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+    /* ---- FAQ ---- */
+    .faq-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-border);
     }
 
-    .feature-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
-      padding: 24px;
+    .faq-item:last-child {
+      border-bottom: none;
     }
 
-    .feature-card h3 {
-      font-size: 0.95rem;
+    .faq-item h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
       font-weight: 600;
       margin-bottom: 6px;
     }
 
-    .feature-card p {
-      font-size: 0.85rem;
+    .faq-item p {
+      font-size: 0.9rem;
       color: var(--color-text-secondary);
-      line-height: 1.55;
+      line-height: 1.6;
     }
 
     /* ---- Code blocks ---- */
@@ -275,10 +272,6 @@
         padding: 32px 0 40px;
       }
 
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-
       .step {
         flex-direction: column;
         gap: 10px;
@@ -329,31 +322,67 @@
     </section>
 
     <section>
-      <h2>Features</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <h3>Single binary</h3>
-          <p>No runtime dependencies. Works on macOS, Linux, and Windows.</p>
+      <h2>How it works</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>I have an HTML page on my laptop. How do I make it available online?</h3>
+          <p>Run <code>siteio sites deploy ./folder --subdomain mysite</code> and it's live at <code>https://mysite.yourdomain.com</code> in seconds.</p>
         </div>
-        <div class="feature-card">
-          <h3>Instant deploys</h3>
-          <p>Zips locally, uploads once. Your site is live immediately.</p>
+        <div class="faq-item">
+          <h3>Can I pick my own subdomain?</h3>
+          <p>Yes. Use the <code>--subdomain</code> flag to choose any name you want, like <code>--subdomain blog</code>.</p>
         </div>
-        <div class="feature-card">
-          <h3>Automatic HTTPS</h3>
-          <p>Traefik handles Let's Encrypt certificates. You don't touch a thing.</p>
+        <div class="faq-item">
+          <h3>Is it served over HTTPS?</h3>
+          <p>Always. Traefik handles Let's Encrypt certificates automatically -- you don't configure anything.</p>
         </div>
-        <div class="feature-card">
-          <h3>Wildcard subdomains</h3>
-          <p>Every site gets its own subdomain on your domain. No DNS changes needed.</p>
+        <div class="faq-item">
+          <h3>I updated my site. How do I redeploy?</h3>
+          <p>Run the same <code>siteio sites deploy</code> command again. It overwrites the previous version instantly.</p>
         </div>
-        <div class="feature-card">
-          <h3>Self-hosted</h3>
-          <p>Runs on your VPS. No vendor lock-in, no surprise bills, no downtime you don't control.</p>
+        <div class="faq-item">
+          <h3>How do I see what sites I have deployed?</h3>
+          <p>Run <code>siteio sites list</code> to see all your deployed sites and apps.</p>
         </div>
-        <div class="feature-card">
-          <h3>Docker apps too</h3>
-          <p>Not just static sites. Deploy containers from images or Git repos with the same CLI.</p>
+        <div class="faq-item">
+          <h3>Can I restrict access with a login?</h3>
+          <p>Yes. Add <code>--allowed-emails "alice@co.com,bob@co.com"</code> or <code>--allowed-domain company.com</code> to require Google OAuth before accessing the site.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I use my own domain name instead?</h3>
+          <p>Yes. Use <code>-d custom.example.com</code> when configuring an app to serve it on your own domain.</p>
+        </div>
+        <div class="faq-item">
+          <h3>I have a Docker container, not static files. Can I deploy that too?</h3>
+          <p>Yes. Use <code>siteio apps create myapp --image nginx:alpine --port 80</code> then <code>siteio apps deploy myapp</code>.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I set environment variables on my app?</h3>
+          <p>Yes. Use <code>siteio apps set myapp -e KEY=value</code> to configure environment variables before deploying.</p>
+        </div>
+        <div class="faq-item">
+          <h3>My app needs persistent storage. Can I mount a volume?</h3>
+          <p>Yes. Use <code>siteio apps set myapp -v data:/app/data</code> to attach a named volume to your container.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can it build directly from a Git repo?</h3>
+          <p>Yes. Use <code>siteio apps create myapp --git https://github.com/user/repo --port 3000</code> and it clones, builds, and deploys.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How do I check the logs of my running app?</h3>
+          <p>Run <code>siteio apps logs myapp --tail 100</code> to stream the latest log output.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I see deploy history and roll back?</h3>
+          <p>Yes. Use <code>siteio sites history mysite</code> to see past versions and <code>siteio sites rollback mysite 3</code> to revert.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can siteio automatically configure my DNS with Cloudflare?</h3>
+          <p>Yes. Pass <code>--cloudflare-token</code> during agent install and it sets up wildcard DNS records automatically.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is there a JSON output mode for scripting?</h3>
+          <p>Yes. Add <code>--json</code> to any command, e.g. <code>siteio --json sites list</code>, and you get machine-readable output.</p>
         </div>
       </div>
     </section>
