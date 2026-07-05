@@ -35,16 +35,3 @@
 13. Can I interact with JIRA — search issues, comment, transition?
 14. Can I read RSS feeds?
 15. Can I use this directly inside Claude Code?
-
-## Claude Cron
-
-1. How do I run a Claude prompt automatically on a schedule?
-2. How do I create my first task?
-3. What schedule types can I choose — daily, weekly, custom?
-4. Can I pick which Claude model to use?
-5. How do I control what Claude is allowed to do?
-6. Can a task resume a previous conversation?
-7. How do I see what happened during a run?
-8. Is there a quick way to check tasks from the menu bar?
-9. Can I define tasks inside a project so they live with the code?
-10. Does Claude Cron update itself?
