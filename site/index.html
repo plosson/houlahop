@@ -13,6 +13,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="brand/v1/houlahop.css">
+  <style>
+    /* 2×2 capability grid: .hh-cards manages its own gutters when used
+       standalone; inside .hh-page they'd double up. */
+    .hh-page .hh-cards { padding: 0; margin: 28px auto 0; }
+    .hh-page .hh-card { padding: 20px 22px; }
+    .hh-card h2 { font-size: 0.95rem; }
+  </style>
 </head>
 <body>
 
@@ -28,40 +35,37 @@
 
   <main class="hh-page">
 
-    <section class="hh-entry" style="--hh-accent: #3fb950;">
-      <h2><a href="https://siteio.houlahop.com">siteio</a></h2>
-      <p class="hh-entry__lead">One command from folder to live site — on my server, not Vercel’s.</p>
-      <p>My agents kept producing sites with nowhere to put them. siteio deploys static sites, PocketBase backends, or full Docker apps to my own VPS — HTTPS, real URL, and rollback, all through a CLI an agent can drive.</p>
-      <p><a href="https://siteio.houlahop.com" class="hh-card__more">→ Learn more</a></p>
-    </section>
+    <div class="hh-cards">
 
-    <hr>
+      <a class="hh-card" href="https://siteio.houlahop.com" style="--hh-accent: #3fb950;">
+        <span class="hh-card__project">$ siteio</span>
+        <h2>One command from folder to live site — on my server, not Vercel’s.</h2>
+        <p class="hh-card__desc">My agents kept producing sites with nowhere to put them. siteio deploys static sites, PocketBase backends, or full Docker apps to my own VPS — HTTPS, real URL, rollback, all CLI-driven.</p>
+        <span class="hh-card__more">→ Learn more</span>
+      </a>
 
-    <section class="hh-entry" style="--hh-accent: #58a6ff;">
-      <h2><a href="https://agentio.houlahop.com">agentio</a></h2>
-      <p class="hh-entry__lead">One CLI to rule them all.</p>
-      <p>I didn’t want a different CLI for every communication channel — one for email, one for Slack, one for JIRA, each with its own auth and credential store. agentio is a single CLI for all of them: authenticate once, use it everywhere.</p>
-      <p><a href="https://agentio.houlahop.com" class="hh-card__more">→ Learn more</a></p>
-    </section>
+      <a class="hh-card" href="https://agentio.houlahop.com" style="--hh-accent: #58a6ff;">
+        <span class="hh-card__project">$ agentio</span>
+        <h2>One CLI to rule them all.</h2>
+        <p class="hh-card__desc">Not a different CLI for every communication channel — email, Slack, Telegram, JIRA behind a single CLI and credential store. Authenticate once, use it everywhere.</p>
+        <span class="hh-card__more">→ Learn more</span>
+      </a>
 
-    <hr>
+      <a class="hh-card" href="https://mdio.houlahop.com" style="--hh-accent: #a371f7;">
+        <span class="hh-card__project">$ mdio</span>
+        <h2>Some documents are bigger than any one repo.</h2>
+        <p class="hh-card__desc">Briefs, specs and architecture notes span projects and end up duplicated, stale, or buried. mdio gives them a home: plain markdown served as live documents that humans and agents read, review and edit together.</p>
+        <span class="hh-card__more">→ Learn more</span>
+      </a>
 
-    <section class="hh-entry" style="--hh-accent: #a371f7;">
-      <h2><a href="https://mdio.houlahop.com">mdio</a></h2>
-      <p class="hh-entry__lead">Some documents are bigger than any one repo.</p>
-      <p>One GitHub repo is one project — but briefs, specs and architecture notes often span several, and end up duplicated, stale, or buried where nobody reads them. mdio gives them a home: a vault of plain markdown served as live documents that humans and agents read, review and edit together.</p>
-      <p><a href="https://mdio.houlahop.com" class="hh-card__more">→ Learn more</a></p>
-    </section>
+      <a class="hh-card" href="https://falcio.houlahop.com" style="--hh-accent: #d29922;">
+        <span class="hh-card__project">$ falcio</span>
+        <h2>Falco has no CLI and no MCP — so my agents couldn’t use it.</h2>
+        <p class="hh-card__desc">My invoicing runs on Falco, which only speaks web and mobile — and I won’t let a browser bot near my accounting. falcio syncs invoices and payment status from a CLI, with <code>--json</code> output agents can parse.</p>
+        <span class="hh-card__more">→ Learn more</span>
+      </a>
 
-    <hr>
-
-    <section class="hh-entry" style="--hh-accent: #d29922;">
-      <h2><a href="https://falcio.houlahop.com">falcio</a></h2>
-      <p class="hh-entry__lead">Falco has no CLI and no MCP — so my agents couldn’t use it.</p>
-      <p>My invoicing runs on <a href="https://www.falco-app.be/">Falco</a>, which only speaks web and mobile. For an agent, that means browser automation — which I won’t allow anywhere near my accounting.</p>
-      <p>falcio is the missing interface: a CLI that syncs Peppol invoices, sales invoices, and payment status, read-only except for marking invoices paid, with <code>--json</code> output an agent can parse.</p>
-      <p><a href="https://falcio.houlahop.com" class="hh-card__more">→ Learn more</a></p>
-    </section>
+    </div>
 
   </main>
 
