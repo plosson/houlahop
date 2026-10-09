@@ -35,7 +35,7 @@ describe("renderNav", () => {
   test("marks only the active tool", () => {
     const html = renderNav("agentio")
     expect(html.match(/aria-current="page"/g)?.length).toBe(1)
-    expect(html).toContain('href="/agentio/" class="on" aria-current="page"')
+    expect(html).toContain('href="/agentio/" aria-label="agentio" class="on" aria-current="page"')
   })
   test("marks nothing on the homepage", () => {
     expect(renderNav("home")).not.toContain("aria-current")
@@ -44,6 +44,16 @@ describe("renderNav", () => {
     const html = renderNav("utilities")
     expect(html.match(/aria-current="page"/g)?.length).toBe(1)
     expect(html).toContain('class="text on" href="/#utilities" aria-current="page"')
+  })
+  test("gives every tool link an aria-label, since the visible name is hidden on phones", () => {
+    const html = renderNav("home")
+    for (const slug of ["siteio", "agentio", "pagerio"]) {
+      expect(html).toContain(`<a href="/${slug}/" aria-label="${slug}">`)
+    }
+    expect(renderNav("agentio")).toContain('<a href="/agentio/" aria-label="agentio" class="on" aria-current="page">')
+  })
+  test("keeps the Utilities link's visible text and gives it no aria-label", () => {
+    expect(renderNav("home")).toMatch(/<a class="text" href="\/#utilities">Utilities<\/a>/)
   })
   test("lists exactly siteio, agentio and pagerio, in that order", () => {
     const slugs = [...renderNav("home").matchAll(/href="\/(\w+)\/"/g)].map((m) => m[1])
@@ -96,6 +106,38 @@ describe("checkOutput", () => {
     await writeFile(join(dist, "index.html"), '<a href="https://github.com/plosson">g</a><a href="#top">t</a>')
     expect(await checkOutput(dist)).toEqual([])
   })
+  test("flags a houlahop.com URL written in a <pre> that points at a missing file", async () => {
+    await writeFile(join(dist, "index.html"), "<pre>curl -LsSf https://houlahop.com/siteio/instal | sh</pre>")
+    expect((await checkOutput(dist)).join()).toContain("/siteio/instal")
+  })
+  test("flags a houlahop.com URL written in a .md file that points at a missing file", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "skill.md"), "Read `https://houlahop.com/agentio/skill.md` first")
+    expect((await checkOutput(dist)).join()).toContain("/agentio/skill.md")
+  })
+  test("accepts a houlahop.com URL that resolves, with query or fragment", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "install"), "#!/bin/sh\n")
+    await writeFile(join(dist, "siteio", "index.html"), "ok")
+    await writeFile(join(dist, "index.html"), "<pre>https://houlahop.com/siteio/install?v=1 https://houlahop.com/siteio/#x https://houlahop.com/siteio https://houlahop.com/</pre>")
+    expect(await checkOutput(dist)).toEqual([])
+  })
+  test("ignores URLs on other hosts", async () => {
+    await writeFile(join(dist, "index.html"), "<pre>https://example.com/siteio/install https://nothoulahop.com/x</pre>")
+    expect(await checkOutput(dist)).toEqual([])
+  })
+  test("strips one trailing period or comma from a URL at the end of a sentence", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "skill.md"), "ok")
+    await writeFile(join(dist, "index.html"), "<p>See https://houlahop.com/siteio/skill.md. Or https://houlahop.com/siteio/skill.md, then go.</p>")
+    expect(await checkOutput(dist)).toEqual([])
+    await writeFile(join(dist, "index.html"), "<p>See https://houlahop.com/siteio/nope.</p>")
+    expect((await checkOutput(dist)).join()).toContain("/siteio/nope")
+  })
+  test("stops a URL at a quote, angle bracket, parenthesis, pipe or backtick", async () => {
+    await writeFile(join(dist, "index.html"), '<i>https://houlahop.com/</i> (https://houlahop.com/) "https://houlahop.com/" `https://houlahop.com/`|')
+    expect(await checkOutput(dist)).toEqual([])
+  })
   test("ignores binary files", async () => {
     await writeFile(join(dist, "icon.png"), new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x00, 0xff]))
     expect(await checkOutput(dist)).toEqual([])
@@ -141,5 +183,17 @@ describe("build", () => {
   test("fails when the output has a broken link", async () => {
     await writeFile(join(root, "src", "pages", "index.html"), "<!--\ntitle: H\ndescription: D\nactive: home\n-->\n<a href=\"/nope/\">x</a>")
     await expect(build(join(root, "src"), join(root, "dist"))).rejects.toThrow("/nope/")
+  })
+  test("ignores dotfiles in pages/ and does not ship dotfiles from static/", async () => {
+    await writeFile(join(root, "src", "pages", ".DS_Store"), "\0junk")
+    await writeFile(join(root, "src", "static", "siteio", ".DS_Store"), "\0junk")
+    await build(join(root, "src"), join(root, "dist"))
+    expect(await Bun.file(join(root, "dist", ".DS_Store")).exists()).toBe(false)
+    expect(await Bun.file(join(root, "dist", "siteio", ".DS_Store")).exists()).toBe(false)
+    expect(await Bun.file(join(root, "dist", "siteio", "install")).exists()).toBe(true)
+  })
+  test("fails, naming the file, when pages/ holds a non-html file", async () => {
+    await writeFile(join(root, "src", "pages", "siteio", "notes.txt"), "oops")
+    await expect(build(join(root, "src"), join(root, "dist"))).rejects.toThrow("pages/siteio/notes.txt: only .html files belong in pages/")
   })
 })

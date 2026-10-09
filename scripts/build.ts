@@ -10,6 +10,8 @@ const TOOLS = [
 ] as const
 const ACTIVE = new Set(["home", "utilities", ...TOOLS.map((t) => t.slug)])
 const FORBIDDEN = [/siteio\.houlahop\.com/i, /agentio\.houlahop\.com/i, /falcio/i]
+// https://houlahop.com/<path> written as text (prompts, <pre>, .md); ends at whitespace, quote, <, ), | or backtick
+const SELF_URL = /https:\/\/houlahop\.com(\/[^\s"'<)|`]*)?/g
 const TEXT_EXT = /\.(html|css|js|md|svg|txt|ps1)$|\/install$/
 
 const META_RE = /^<!--\n([\s\S]*?)\n-->\n/
@@ -33,7 +35,7 @@ export function parsePage(source: string, file: string): { meta: PageMeta; body:
 export function renderNav(active: string): string {
   const tools = TOOLS.map((t) => {
     const on = t.slug === active ? ' class="on" aria-current="page"' : ""
-    return `<a href="/${t.slug}/"${on}><img src="${t.icon}" alt="" width="20" height="20"><span>${t.slug}</span></a>`
+    return `<a href="/${t.slug}/" aria-label="${t.slug}"${on}><img src="${t.icon}" alt="" width="20" height="20"><span>${t.slug}</span></a>`
   })
   const utilitiesOn = active === "utilities" ? ' aria-current="page"' : ""
   const utilities = `<span class="sep"></span><a class="text${utilitiesOn ? " on" : ""}" href="/#utilities"${utilitiesOn}>Utilities</a>`
@@ -61,6 +63,9 @@ async function listFiles(dir: string): Promise<string[]> {
   return entries.filter((e) => e.isFile()).map((e) => relative(dir, join(e.parentPath, e.name)))
 }
 
+// macOS .DS_Store and friends: never a page, never shipped
+const isHidden = (file: string) => file.split("/").some((part) => part.startsWith("."))
+
 async function exists(path: string): Promise<boolean> {
   return stat(path).then(() => true, () => false)
 }
@@ -80,6 +85,10 @@ export async function checkOutput(dist: string): Promise<string[]> {
     for (const pattern of FORBIDDEN) {
       if (pattern.test(text)) problems.push(`${file}: contains ${pattern.source}`)
     }
+    for (const [, rawPath = ""] of text.matchAll(SELF_URL)) {
+      const path = rawPath.replace(/[.,]$/, "") || "/"
+      if (!(await linkTargetExists(dist, path))) problems.push(`${file}: broken houlahop.com URL ${path}`)
+    }
     if (!file.endsWith(".html")) continue
     for (const [, href] of text.matchAll(/(?:href|src)="(\/[^"]*)"/g)) {
       if (!(await linkTargetExists(dist, href))) problems.push(`${file}: broken link ${href}`)
@@ -95,7 +104,7 @@ export async function build(srcDir: string, distDir: string): Promise<void> {
 
   const staticDir = join(srcDir, "static")
   if (await exists(staticDir)) {
-    for (const file of await listFiles(staticDir)) {
+    for (const file of (await listFiles(staticDir)).filter((f) => !isHidden(f))) {
       await mkdir(dirname(join(distDir, file)), { recursive: true })
       await copyFile(join(staticDir, file), join(distDir, file))
       written.add(file)
@@ -103,7 +112,8 @@ export async function build(srcDir: string, distDir: string): Promise<void> {
   }
 
   const pagesDir = join(srcDir, "pages")
-  for (const file of await listFiles(pagesDir)) {
+  for (const file of (await listFiles(pagesDir)).filter((f) => !isHidden(f))) {
+    if (!file.endsWith(".html")) throw new Error(`pages/${file}: only .html files belong in pages/ (put other files in static/)`)
     if (written.has(file)) throw new Error(`${file}: written by both a page and a static file`)
     const { meta, body } = parsePage(await readFile(join(pagesDir, file), "utf8"), `pages/${file}`)
     await mkdir(dirname(join(distDir, file)), { recursive: true })

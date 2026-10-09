@@ -1,8 +1,8 @@
-# Design Brief — AI Agent Capabilities
+# Design Brief — houlahop.com
 
 ## Vision
 
-Create a website that showcases a small collection of open-source tools that give AI agents practical, real-world capabilities.
+houlahop.com is one site for all my tools. It shows the open-source tools I built for my AI agents. It also lists a few small utilities I use myself.
 
 This is **not**:
 
@@ -12,9 +12,9 @@ This is **not**:
 - A GitHub profile
 - A documentation site
 
-It is a **problem-oriented capability catalog**.
+It is a **problem-oriented catalog of tools**.
 
-The primary goal is to change how visitors think about AI agents.
+The primary goal is to show what my AI agents can do for me.
 
 When someone leaves the site, they should think:
 
@@ -24,19 +24,23 @@ The secondary goal is:
 
 > "I want to use one (or more) of these tools."
 
+The way to install a tool is to ask an agent. Each tool has a prompt to paste into an agent. Manual install steps are one click away.
+
 ---
 
 # Core Philosophy
 
-The website is **not about me**.
+The site shows the tools I use. It speaks in the first person. It does not try to convince anyone.
 
-The website is **not about the code**.
+The site is **not about my career**.
 
-The website is about the **problems AI agents can now solve**.
+The site is **not about the code**.
 
-The repositories are simply implementations of those capabilities.
+The site is about the **problems my agents solve**.
 
-Every page should answer four questions:
+The repositories are simply implementations of those tools.
+
+Every tool page should answer four questions:
 
 1. What problem exists?
 2. Why is this difficult for AI agents?
@@ -57,7 +61,7 @@ Primary audience:
 
 Secondary audience:
 
-- Curious developers interested in AI capabilities
+- Curious developers interested in what agents can do
 - Technical founders
 - Early adopters
 
@@ -79,7 +83,7 @@ Reads a simple statement explaining the mission.
 
 ↓
 
-Discovers interesting AI capabilities.
+Discovers interesting tools for agents.
 
 ↓
 
@@ -89,7 +93,7 @@ Thinks:
 
 ↓
 
-Clicks one capability.
+Clicks one tool.
 
 ↓
 
@@ -101,11 +105,11 @@ Realizes this solves a problem they have.
 
 ↓
 
-Visits GitHub or documentation.
+Pastes the install prompt into an agent, or visits GitHub.
 
 ↓
 
-Explores the remaining capabilities.
+Explores the remaining tools.
 
 ---
 
@@ -113,13 +117,21 @@ Explores the remaining capabilities.
 
 Home
 
-├── SiteIO
+├── Tools
 
-├── AgentIO
+│   ├── siteio
 
-├── FalcoCLI
+│   ├── agentio (with its Mac app, AgentIO Companion)
 
-└── Future capabilities
+│   └── pagerio
+
+└── Utilities
+
+    └── Copycat
+
+Tools are for my agents. Utilities are small apps I use myself, not for agents.
+
+Each tool and utility has one page: `/siteio/`, `/agentio/`, `/pagerio/`, `/copycat/`.
 
 No blog.
 
@@ -143,11 +155,9 @@ A concise mission statement.
 
 Example direction:
 
-> Open-source capabilities that give AI agents real-world skills.
+> Tools for my AI agents. Open source.
 
-or
-
-> Building reusable interfaces that let autonomous AI agents solve real business problems.
+Followed by one line: I built each one for one job. To install one, I ask my agent.
 
 The hero should be short.
 
@@ -161,43 +171,45 @@ No biography.
 
 Immediately after the hero:
 
-Three capability cards.
+The three tools, each with its app icon and an install prompt.
 
-Each card represents a capability first.
-
-The project name comes second.
+Each card says what the tool does for me. The tool name and its icon sit above it.
 
 Example structure:
 
 ---
 
-## 🌐 Build production-ready applications
+**siteio**
 
-**SiteIO**
+My agents put websites and apps online, on my own server.
 
-Enable AI agents to deliver complete websites and applications for non-technical users—from generation to deployment and accessibility.
+Prompt: Install siteio by reading and following https://houlahop.com/siteio/skill.md
 
-→ Learn more
-
----
-
-## 💬 Communicate across every channel
-
-**AgentIO**
-
-Give AI agents a unified interface to email, messaging platforms, calendars, and other communication systems.
-
-→ Learn more
+→ About siteio
 
 ---
 
-## 💼 Operate accounting systems
+**agentio**
 
-**FalcoCLI**
+My agents use my email, Slack, WhatsApp, JIRA and more.
 
-Allow AI agents to perform accounting operations safely through a CLI instead of fragile browser automation.
+Prompt: Install agentio by reading and following https://houlahop.com/agentio/skill.md
 
-→ Learn more
+→ About agentio and its Mac app
+
+---
+
+**pagerio**
+
+My agents ring my iPhone and Mac when they need me.
+
+Prompt: ask the agent to page me, with the URL of my pager. The app comes first.
+
+→ About pagerio
+
+---
+
+Below the cards, a **Utilities** list. One row per utility, with its icon, one sentence and a download link. Today: Copycat.
 
 ---
 
@@ -209,25 +221,27 @@ Example:
 
 Home
 
-GitHub
+siteio, agentio, pagerio
 
-Documentation
+Utilities
+
+GitHub
 
 No unnecessary pages.
 
 ---
 
-# Capability Pages
+# Tool Pages
 
-Every capability page follows exactly the same structure.
+Every tool page follows the same structure.
 
 ---
 
 # Hero
 
-Capability title
+Tool name and app icon
 
-Project name
+What it does for me
 
 One-sentence summary
 
@@ -267,7 +281,7 @@ Concrete scenarios.
 
 For example:
 
-Use SiteIO when your agents need to:
+Use siteio when your agents need to:
 
 - Build customer websites
 - Deliver internal tools
@@ -286,7 +300,7 @@ No marketing fluff.
 
 # 5. Getting Started
 
-Installation
+The install prompt comes first. Manual install steps come next.
 
 GitHub
 
@@ -302,7 +316,7 @@ Possible roadmap.
 
 Future integrations.
 
-Related capabilities.
+Related tools.
 
 ---
 
@@ -317,6 +331,10 @@ Direct.
 Honest.
 
 Engineering-focused.
+
+First person. I describe what I use.
+
+Plain language (ISO 24495-1). One sentence per idea.
 
 Avoid:
 
@@ -333,6 +351,8 @@ The visitor should feel:
 
 # Visual Style
 
+The design is called Swatch v4. The reference is `docs/design/swatch-v4.html`.
+
 Overall feeling:
 
 Minimal.
@@ -343,6 +363,10 @@ Confident.
 
 Product-focused.
 
+Light page. Grey chrome. Each tool owns one colour tint. The tint shows on its card and its page.
+
+App icons carry the identity of each tool and utility.
+
 No flashy gradients.
 
 No AI clichés.
@@ -350,14 +374,6 @@ No AI clichés.
 No giant illustrations of robots.
 
 No "future" aesthetics.
-
-Think:
-
-- Stripe
-- Vercel
-- Linear
-- Raycast
-- Tailscale
 
 Rather than:
 
@@ -403,33 +419,33 @@ The projects should stand on their own.
 
 This is **not** a portfolio.
 
-It is a curated collection of reusable capabilities for autonomous AI agents.
+It is the set of tools I built for my AI agents, plus a few utilities.
 
-The projects are independent.
+The tools are independent. Each one works alone.
 
-Together, they demonstrate what modern AI agents can accomplish when given the right interfaces.
+Together, they show what agents can do when given the right interfaces.
 
 ---
 
-# Current Capabilities
+# Current Tools
 
-## SiteIO
+## siteio
 
-Capability:
+What it does:
 
-Enable AI agents to autonomously create, iterate, deploy, and deliver production-ready websites and applications for non-technical users.
+My agents put websites and apps online, on my own server.
 
 Core message:
 
-> Let your AI agent deliver complete software projects—not just generate code.
+> Let your agent deliver complete software projects, not just generate code.
 
 ---
 
-## AgentIO
+## agentio
 
-Capability:
+What it does:
 
-Provide AI agents with a unified interface to communication channels, allowing them to interact with users through multiple platforms using a consistent API/CLI.
+My agents use my email, Slack, WhatsApp, JIRA and more, through one CLI. A Mac app, AgentIO Companion, comes with it.
 
 Core message:
 
@@ -437,15 +453,27 @@ Core message:
 
 ---
 
-## FalcoCLI
+## pagerio
 
-Capability:
+What it does:
 
-Allow AI agents to operate accounting software through a dedicated CLI, enabling reliable financial workflows without browser automation.
+My agents ring my iPhone and Mac when they need me. The app is at pagerio.chuut.com.
 
 Core message:
 
-> Let your agents perform real accounting tasks safely and predictably.
+> Your agent pages you when it needs you.
+
+---
+
+# Utilities
+
+## Copycat
+
+What it does:
+
+Copy a GIF or a video from a web page and paste it anywhere, still animated. Mac app.
+
+Utilities are for me, not for agents. They are listed below the tools.
 
 ---
 
@@ -457,6 +485,6 @@ A successful visitor should leave thinking:
 
 And ideally:
 
-> "I can use one of these capabilities in my own agents."
+> "I can use one of these tools with my own agents."
 
 Everything on the site should reinforce those two outcomes.
