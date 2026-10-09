@@ -1,0 +1,37 @@
+<!--
+title: Copycat · houlahop
+description: Copycat copies the real file from a web page, so a GIF stays animated and a video stays a video when I paste it.
+active: utilities
+-->
+<div class="t-copycat">
+<section class="u-hero"><div class="in">
+  <div class="appicon"><img src="/assets/icons/copycat.svg" alt="Copycat"></div>
+  <div>
+    <p class="kind">Utility · Mac</p>
+    <h1>Copycat</h1>
+    <p>Browsers can only copy text and still images. Copycat copies the real file, so a GIF stays animated and a video stays a video when I paste it.</p>
+    <a class="btn btn-ink btn-lg" href="https://github.com/plosson/copycat/releases/latest">Download for Mac</a><span class="meta">macOS 14 or later · signed and notarized</span>
+  </div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>How it works</h2>
+  <p class="sub">It runs in the menu bar. It only acts when a site I allowed asks it to.</p>
+  <div class="facts">
+    <div class="fact"><b>Press Copy on a page</b><span>The page asks Copycat to copy a file by its URL.</span></div>
+    <div class="fact"><b>Allow the site once</b><span>Copycat asks me the first time. Sites I didn't allow can't use it.</span></div>
+    <div class="fact"><b>Paste anywhere</b><span>Messages, Slack, WhatsApp, Mail. The GIF or video arrives as a real file.</span></div>
+  </div>
+</div></section>
+
+<section class="block"><div class="in">
+  <details class="manual">
+    <summary>Add a Copy button to a site</summary>
+<pre>&lt;script src="copycat.js"&gt;&lt;/script&gt;
+
+if (await Copycat.status() !== "absent") {
+  await Copycat.copy("https://example.com/cat.gif", { name: "cat.gif" })
+}</pre>
+  </details>
+</div></section>
+</div>

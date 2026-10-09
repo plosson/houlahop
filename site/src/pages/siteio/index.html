@@ -1,0 +1,46 @@
+<!--
+title: siteio · houlahop
+description: My agents put websites and apps online, on my own server.
+active: siteio
+-->
+<div class="t-siteio">
+<section class="p-hero"><div class="in">
+  <div class="appicon"><img src="/assets/icons/siteio.svg" alt="siteio"></div>
+  <div>
+    <h1>siteio</h1>
+    <p>My agents put websites and apps online, on my own server. Each one gets HTTPS and its own address.</p>
+    <div class="prompt">
+      <span class="lbl">Paste into an agent</span>
+      <div class="txt">Install siteio by reading and following <i>https://houlahop.com/siteio/skill.md</i></div>
+      <div class="row"><button class="btn btn-ink" data-copy>Copy</button><a class="small" href="#install">Install by hand</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>What my agents can put online</h2>
+  <p class="sub">One command for each.</p>
+  <div class="svcs"><span>A folder of HTML</span><span>A Docker image</span><span>A Git repository</span><span>A folder in a monorepo</span><span>A site with sign-in and a database</span></div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>My server, my addresses</h2>
+  <p class="sub">siteio runs on a server I own.</p>
+  <div class="facts">
+    <div class="fact"><b>HTTPS</b><span>Certificates are issued and renewed automatically.</span></div>
+    <div class="fact"><b>History</b><span>Every deploy is kept. Go back with one command.</span></div>
+    <div class="fact"><b>My domains</b><span>Any domain can point to a site.</span></div>
+  </div>
+</div></section>
+
+<section class="block" id="install"><div class="in">
+  <details class="manual">
+    <summary>Install by hand</summary>
+<pre># macOS and Linux
+curl -LsSf https://houlahop.com/siteio/install | sh
+
+# Connect to a server
+siteio login --token &lt;connection-token&gt;</pre>
+  </details>
+</div></section>
+</div>

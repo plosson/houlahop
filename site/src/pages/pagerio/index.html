@@ -1,0 +1,41 @@
+<!--
+title: pagerio · houlahop
+description: My agents ring my iPhone and Mac when they need me.
+active: pagerio
+-->
+<div class="t-pagerio">
+<section class="p-hero"><div class="in">
+  <div class="appicon"><img class="sq" src="/assets/icons/pagerio.png" alt="pagerio"></div>
+  <div>
+    <h1>pagerio</h1>
+    <p>My agents ring my iPhone and Mac when they need me. I have one private URL; anything that can send a web request can use it.</p>
+    <div class="prompt">
+      <span class="lbl">Get the app, then paste into an agent</span>
+      <div class="txt">When you finish or need my answer, page me. Read <i>&lt;my pager URL&gt;</i> to learn how.</div>
+      <div class="row"><button class="btn btn-ink" data-copy>Copy</button><a class="small" href="https://pagerio.chuut.com">Get the app</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>How it works</h2>
+  <p class="sub">No key and no SDK. The URL is the secret.</p>
+  <div class="facts">
+    <div class="fact"><b>One private URL</b><span>I get it by signing in to the app. Anyone with it can page me, so it stays private.</span></div>
+    <div class="fact"><b>Rings within seconds</b><span>My iPhone and Mac get the page as a notification.</span></div>
+    <div class="fact"><b>Details and links</b><span>A page can carry longer text and a link. I see them when I open it.</span></div>
+  </div>
+</div></section>
+
+<section class="block" id="install"><div class="in">
+  <details class="manual">
+    <summary>Send a page by hand</summary>
+<pre>curl -d "Build finished" &lt;my pager URL&gt;
+
+# With a title, details and a link
+curl &lt;my pager URL&gt; \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Backup failed","message":"Disk full on db-1.","url":"https://example.com"}'</pre>
+  </details>
+</div></section>
+</div>
