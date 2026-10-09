@@ -22,7 +22,8 @@
   .in { max-width: 1040px; margin: 0 auto; padding: 0 32px; }
   .hh-header { background: rgba(255,255,255,.85); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
   .hh-header .in { height: 56px; display: flex; align-items: center; gap: 24px; }
-  .wordmark { font-weight: 700; font-size: 17px; letter-spacing: -.03em; text-decoration: none; }
+  .wordmark { font-weight: 700; font-size: 17px; letter-spacing: -.03em; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+  .wordmark img { width: 24px; height: 24px; }
   .hh-nav { display: flex; gap: 2px; }
   .hh-nav a { text-decoration: none; font-size: 14px; color: var(--ink-2); padding: 5px 10px 5px 6px; border-radius: 999px; display: inline-flex; align-items: center; gap: 7px; }
   .hh-nav a.on { background: var(--fill-2); color: var(--ink); font-weight: 500; }
