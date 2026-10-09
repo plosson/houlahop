@@ -46,11 +46,8 @@
   .hero p { margin: 0; font-size: 18px; color: var(--ink-2); }
 
   .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 48px 0 72px; }
-  .apps:hover .app { opacity: .6; }
-  .apps .app:hover { opacity: 1; transform: translateY(-4px); }
   .app { display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform .25s, opacity .25s; }
   .app .appicon { width: 168px; height: 168px; margin-bottom: 18px; transition: transform .25s; }
-  .app:hover .appicon { transform: scale(1.04) rotate(-2deg); }
   .app h2 { margin: 0; font-size: 28px; letter-spacing: -.03em; font-weight: 600; }
   .app .what { margin: 6px 0 18px; font-size: 16px; color: var(--ink-2); min-height: 48px; max-width: 300px; }
   .app .extra { font-size: 12px; font-weight: 500; color: var(--tint-ink); background: var(--tint); border-radius: 999px; padding: 3px 10px; margin: -8px 0 14px; }
@@ -117,7 +114,6 @@
   .utils-head p { margin: 0; font-size: 15px; color: var(--ink-2); }
   .util-list { background: var(--fill); border-radius: 22px; padding: 6px; display: grid; gap: 4px; }
   .util { display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center; padding: 12px 14px; border-radius: 16px; background: var(--bg); text-decoration: none; transition: transform .2s, box-shadow .2s; }
-  .util:hover { transform: scale(1.005); box-shadow: 0 10px 30px rgba(30,40,80,.08); }
   .util .appicon { width: 56px; height: 56px; filter: drop-shadow(0 6px 10px rgba(20,30,60,.14)); }
   .util b { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
   .util span.d { font-size: 14px; color: var(--ink-2); }
@@ -135,6 +131,13 @@
   .code { font-family: var(--mono); font-size: 13px; background: var(--fill); border-radius: 16px; padding: 16px 18px; line-height: 1.7; white-space: pre-wrap; margin: 0; }
   .code .c { color: var(--ink-2); }
 
+  /* hover effects only where a real pointer exists: on touch screens :hover sticks after a tap */
+  @media (hover: hover) and (pointer: fine) {
+    .apps:hover .app { opacity: .6; }
+    .apps .app:hover { opacity: 1; transform: translateY(-4px); }
+    .app:hover .appicon { transform: scale(1.04) rotate(-2deg); }
+    .util:hover { transform: scale(1.005); box-shadow: 0 10px 30px rgba(30,40,80,.08); }
+  }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   @media (max-width: 860px) {
     .apps, .facts, .mac, .p-hero .in, .u-hero .in { grid-template-columns: 1fr; }
