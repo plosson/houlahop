@@ -23,11 +23,18 @@ jobs:
       - run: bun run build
       - name: Install siteio
         run: |
-          curl -LsSf https://siteio.houlahop.com/install | sh
+          curl -LsSf https://houlahop.com/siteio/install | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Login
         run: siteio login --username github-actions
         env:
           SITEIO_TOKEN: ${{ secrets.SITEIO_TOKEN }}
       - run: siteio sites deploy site/dist -n www
-      - run: sh scripts/smoke.sh
+      - name: Smoke test
+        run: |
+          for i in 1 2 3; do
+            sh scripts/smoke.sh && exit 0
+            echo "smoke try $i failed"
+            sleep 10
+          done
+          exit 1
