@@ -184,4 +184,16 @@ describe("build", () => {
     await writeFile(join(root, "src", "pages", "index.html"), "<!--\ntitle: H\ndescription: D\nactive: home\n-->\n<a href=\"/nope/\">x</a>")
     await expect(build(join(root, "src"), join(root, "dist"))).rejects.toThrow("/nope/")
   })
+  test("ignores dotfiles in pages/ and does not ship dotfiles from static/", async () => {
+    await writeFile(join(root, "src", "pages", ".DS_Store"), "\0junk")
+    await writeFile(join(root, "src", "static", "siteio", ".DS_Store"), "\0junk")
+    await build(join(root, "src"), join(root, "dist"))
+    expect(await Bun.file(join(root, "dist", ".DS_Store")).exists()).toBe(false)
+    expect(await Bun.file(join(root, "dist", "siteio", ".DS_Store")).exists()).toBe(false)
+    expect(await Bun.file(join(root, "dist", "siteio", "install")).exists()).toBe(true)
+  })
+  test("fails, naming the file, when pages/ holds a non-html file", async () => {
+    await writeFile(join(root, "src", "pages", "siteio", "notes.txt"), "oops")
+    await expect(build(join(root, "src"), join(root, "dist"))).rejects.toThrow("pages/siteio/notes.txt: only .html files belong in pages/")
+  })
 })

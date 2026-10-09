@@ -63,6 +63,9 @@ async function listFiles(dir: string): Promise<string[]> {
   return entries.filter((e) => e.isFile()).map((e) => relative(dir, join(e.parentPath, e.name)))
 }
 
+// macOS .DS_Store and friends: never a page, never shipped
+const isHidden = (file: string) => file.split("/").some((part) => part.startsWith("."))
+
 async function exists(path: string): Promise<boolean> {
   return stat(path).then(() => true, () => false)
 }
@@ -101,7 +104,7 @@ export async function build(srcDir: string, distDir: string): Promise<void> {
 
   const staticDir = join(srcDir, "static")
   if (await exists(staticDir)) {
-    for (const file of await listFiles(staticDir)) {
+    for (const file of (await listFiles(staticDir)).filter((f) => !isHidden(f))) {
       await mkdir(dirname(join(distDir, file)), { recursive: true })
       await copyFile(join(staticDir, file), join(distDir, file))
       written.add(file)
@@ -109,7 +112,8 @@ export async function build(srcDir: string, distDir: string): Promise<void> {
   }
 
   const pagesDir = join(srcDir, "pages")
-  for (const file of await listFiles(pagesDir)) {
+  for (const file of (await listFiles(pagesDir)).filter((f) => !isHidden(f))) {
+    if (!file.endsWith(".html")) throw new Error(`pages/${file}: only .html files belong in pages/ (put other files in static/)`)
     if (written.has(file)) throw new Error(`${file}: written by both a page and a static file`)
     const { meta, body } = parsePage(await readFile(join(pagesDir, file), "utf8"), `pages/${file}`)
     await mkdir(dirname(join(distDir, file)), { recursive: true })
