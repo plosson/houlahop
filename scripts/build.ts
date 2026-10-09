@@ -35,7 +35,7 @@ export function parsePage(source: string, file: string): { meta: PageMeta; body:
 export function renderNav(active: string): string {
   const tools = TOOLS.map((t) => {
     const on = t.slug === active ? ' class="on" aria-current="page"' : ""
-    return `<a href="/${t.slug}/"${on}><img src="${t.icon}" alt="" width="20" height="20"><span>${t.slug}</span></a>`
+    return `<a href="/${t.slug}/" aria-label="${t.slug}"${on}><img src="${t.icon}" alt="" width="20" height="20"><span>${t.slug}</span></a>`
   })
   const utilitiesOn = active === "utilities" ? ' aria-current="page"' : ""
   const utilities = `<span class="sep"></span><a class="text${utilitiesOn ? " on" : ""}" href="/#utilities"${utilitiesOn}>Utilities</a>`

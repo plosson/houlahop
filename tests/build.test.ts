@@ -35,7 +35,7 @@ describe("renderNav", () => {
   test("marks only the active tool", () => {
     const html = renderNav("agentio")
     expect(html.match(/aria-current="page"/g)?.length).toBe(1)
-    expect(html).toContain('href="/agentio/" class="on" aria-current="page"')
+    expect(html).toContain('href="/agentio/" aria-label="agentio" class="on" aria-current="page"')
   })
   test("marks nothing on the homepage", () => {
     expect(renderNav("home")).not.toContain("aria-current")
@@ -44,6 +44,16 @@ describe("renderNav", () => {
     const html = renderNav("utilities")
     expect(html.match(/aria-current="page"/g)?.length).toBe(1)
     expect(html).toContain('class="text on" href="/#utilities" aria-current="page"')
+  })
+  test("gives every tool link an aria-label, since the visible name is hidden on phones", () => {
+    const html = renderNav("home")
+    for (const slug of ["siteio", "agentio", "pagerio"]) {
+      expect(html).toContain(`<a href="/${slug}/" aria-label="${slug}">`)
+    }
+    expect(renderNav("agentio")).toContain('<a href="/agentio/" aria-label="agentio" class="on" aria-current="page">')
+  })
+  test("keeps the Utilities link's visible text and gives it no aria-label", () => {
+    expect(renderNav("home")).toMatch(/<a class="text" href="\/#utilities">Utilities<\/a>/)
   })
   test("lists exactly siteio, agentio and pagerio, in that order", () => {
     const slugs = [...renderNav("home").matchAll(/href="\/(\w+)\/"/g)].map((m) => m[1])
