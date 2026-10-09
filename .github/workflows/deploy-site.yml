@@ -12,6 +12,7 @@ on:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
     name: Deploy to houlahop.com
     runs-on: ubuntu-latest
     steps:
