@@ -457,7 +457,7 @@ Core message:
 
 What it does:
 
-My agents ring my iPhone and Mac when they need me. The app is at pagerio.chuut.com.
+My agents ring my iPhone and Mac when they need me. The app is at pagerio.houlahop.com, and the Mac app downloads from GitHub.
 
 Core message:
 
