@@ -11,7 +11,7 @@ The public site for my tools (siteio, agentio with its Mac app, pagerio) and uti
     bun run build     # writes site/dist and checks it
     sh scripts/smoke.sh   # checks the live site
 
-A push to `main` deploys to houlahop.com.
+A push to `main` that touches `site/src/**`, `scripts/build.ts`, `package.json` or the deploy workflow deploys to houlahop.com.
 
 When a tool changes its install steps, update its files here, not in the tool repo.
 
