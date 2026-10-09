@@ -96,6 +96,38 @@ describe("checkOutput", () => {
     await writeFile(join(dist, "index.html"), '<a href="https://github.com/plosson">g</a><a href="#top">t</a>')
     expect(await checkOutput(dist)).toEqual([])
   })
+  test("flags a houlahop.com URL written in a <pre> that points at a missing file", async () => {
+    await writeFile(join(dist, "index.html"), "<pre>curl -LsSf https://houlahop.com/siteio/instal | sh</pre>")
+    expect((await checkOutput(dist)).join()).toContain("/siteio/instal")
+  })
+  test("flags a houlahop.com URL written in a .md file that points at a missing file", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "skill.md"), "Read `https://houlahop.com/agentio/skill.md` first")
+    expect((await checkOutput(dist)).join()).toContain("/agentio/skill.md")
+  })
+  test("accepts a houlahop.com URL that resolves, with query or fragment", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "install"), "#!/bin/sh\n")
+    await writeFile(join(dist, "siteio", "index.html"), "ok")
+    await writeFile(join(dist, "index.html"), "<pre>https://houlahop.com/siteio/install?v=1 https://houlahop.com/siteio/#x https://houlahop.com/siteio https://houlahop.com/</pre>")
+    expect(await checkOutput(dist)).toEqual([])
+  })
+  test("ignores URLs on other hosts", async () => {
+    await writeFile(join(dist, "index.html"), "<pre>https://example.com/siteio/install https://nothoulahop.com/x</pre>")
+    expect(await checkOutput(dist)).toEqual([])
+  })
+  test("strips one trailing period or comma from a URL at the end of a sentence", async () => {
+    await mkdir(join(dist, "siteio"), { recursive: true })
+    await writeFile(join(dist, "siteio", "skill.md"), "ok")
+    await writeFile(join(dist, "index.html"), "<p>See https://houlahop.com/siteio/skill.md. Or https://houlahop.com/siteio/skill.md, then go.</p>")
+    expect(await checkOutput(dist)).toEqual([])
+    await writeFile(join(dist, "index.html"), "<p>See https://houlahop.com/siteio/nope.</p>")
+    expect((await checkOutput(dist)).join()).toContain("/siteio/nope")
+  })
+  test("stops a URL at a quote, angle bracket, parenthesis, pipe or backtick", async () => {
+    await writeFile(join(dist, "index.html"), '<i>https://houlahop.com/</i> (https://houlahop.com/) "https://houlahop.com/" `https://houlahop.com/`|')
+    expect(await checkOutput(dist)).toEqual([])
+  })
   test("ignores binary files", async () => {
     await writeFile(join(dist, "icon.png"), new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x00, 0xff]))
     expect(await checkOutput(dist)).toEqual([])

@@ -10,6 +10,8 @@ const TOOLS = [
 ] as const
 const ACTIVE = new Set(["home", "utilities", ...TOOLS.map((t) => t.slug)])
 const FORBIDDEN = [/siteio\.houlahop\.com/i, /agentio\.houlahop\.com/i, /falcio/i]
+// https://houlahop.com/<path> written as text (prompts, <pre>, .md); ends at whitespace, quote, <, ), | or backtick
+const SELF_URL = /https:\/\/houlahop\.com(\/[^\s"'<)|`]*)?/g
 const TEXT_EXT = /\.(html|css|js|md|svg|txt|ps1)$|\/install$/
 
 const META_RE = /^<!--\n([\s\S]*?)\n-->\n/
@@ -79,6 +81,10 @@ export async function checkOutput(dist: string): Promise<string[]> {
     const text = await readFile(join(dist, file), "utf8")
     for (const pattern of FORBIDDEN) {
       if (pattern.test(text)) problems.push(`${file}: contains ${pattern.source}`)
+    }
+    for (const [, rawPath = ""] of text.matchAll(SELF_URL)) {
+      const path = rawPath.replace(/[.,]$/, "") || "/"
+      if (!(await linkTargetExists(dist, path))) problems.push(`${file}: broken houlahop.com URL ${path}`)
     }
     if (!file.endsWith(".html")) continue
     for (const [, href] of text.matchAll(/(?:href|src)="(\/[^"]*)"/g)) {
