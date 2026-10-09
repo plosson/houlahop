@@ -15,9 +15,6 @@
   body { font: 16px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
   code { font-family: var(--mono); font-size: .92em; }
-  .dots { display: flex; gap: 7px; }
-  .dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
-  .dots i:nth-child(1){background:#ff5f57}.dots i:nth-child(2){background:#febc2e}.dots i:nth-child(3){background:#28c840}
   /* ---------- Site ---------- */
   .in { max-width: 1040px; margin: 0 auto; padding: 0 32px; }
   .hh-header { background: rgba(255,255,255,.85); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
@@ -91,17 +88,8 @@
   .mac li { padding: 8px 0; border-top: 1px solid var(--line); font-size: 15px; }
   .mac li:first-child { border-top: 0; }
   .tag { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 999px; background: var(--tint); color: var(--tint-ink); }
-  .win { border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px var(--line), 0 24px 60px rgba(30,40,80,.12); font-size: 13px; }
-  .win .bar { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--fill); border-bottom: 1px solid var(--line); }
-  .win .bar b { font-weight: 600; font-size: 13px; }
-  .win .rows { padding: 10px; display: grid; gap: 6px; }
-  .win .r { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line); }
-  .win .r .s { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 11px; }
-  .win .r .n { flex: 1; }
-  .win .r .n small { display: block; color: var(--ink-2); font-size: 11px; }
-  .st { font-size: 11px; display: inline-flex; gap: 5px; align-items: center; color: var(--ink-2); }
-  .st::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #12b76a; }
-  .st.bad::before { background: #ff4f45; }
+  .shot { display: block; max-width: 100%; height: auto; justify-self: center; filter: drop-shadow(0 0 1px rgba(30,40,80,.25)) drop-shadow(0 20px 40px rgba(30,40,80,.14)); }
+  .shot.menu { width: 340px; }
   .demo { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--fill); box-shadow: 0 0 0 1px var(--line), 0 24px 60px rgba(30,40,80,.12); }
   details.manual { background: var(--fill); border-radius: 16px; padding: 14px 18px; }
   details.manual summary { cursor: pointer; font-weight: 500; }
