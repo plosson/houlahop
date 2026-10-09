@@ -4,27 +4,30 @@ on:
   push:
     branches: [main]
     paths:
-      - 'site/**'
+      - 'site/src/**'
+      - 'scripts/build.ts'
+      - 'package.json'
+      - '.github/workflows/deploy-site.yml'
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy to www.houlahop.com
+    if: github.ref == 'refs/heads/main'
+    name: Deploy to houlahop.com
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun test
+      - run: bun run build
       - name: Install siteio
         run: |
           curl -LsSf https://siteio.houlahop.com/install | sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-
       - name: Login
         run: siteio login --username github-actions
         env:
           SITEIO_TOKEN: ${{ secrets.SITEIO_TOKEN }}
-
-      - name: Deploy site
-        run: siteio sites deploy site -n www
+      - run: siteio sites deploy site/dist -n www
+      - run: sh scripts/smoke.sh

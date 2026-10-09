@@ -1,0 +1,13 @@
+{
+  "name": "houlahop-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun scripts/build.ts",
+    "test": "bun test",
+    "smoke": "sh scripts/smoke.sh"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

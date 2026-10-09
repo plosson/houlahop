@@ -1,0 +1,71 @@
+<!--
+title: agentio · houlahop
+description: My agents use my email, chat and work tools. I sign in to each account once.
+active: agentio
+-->
+<div class="t-agentio">
+<section class="p-hero"><div class="in">
+  <div class="appicon"><img src="/assets/icons/agentio.png" alt="agentio"></div>
+  <div>
+    <h1>agentio</h1>
+    <p>My agents use my email, chat and work tools. I sign in to each account once.</p>
+    <div class="prompt">
+      <span class="lbl">Paste into an agent</span>
+      <div class="txt">Install agentio by reading and following <i>https://houlahop.com/agentio/skill.md</i></div>
+      <div class="row"><button class="btn btn-ink" data-copy>Copy</button><a class="small" href="#install">Install by hand</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>What my agents can use</h2>
+  <p class="sub">Read, search and send. One command line for all of them.</p>
+  <div class="svcs"><span>Gmail</span><span>Slack</span><span>WhatsApp</span><span>Google Chat</span><span>Google Drive</span><span>JIRA</span><span>Confluence</span><span>Apple Notes</span><span>Discourse</span><span>RSS</span><span>Revolut</span><span>Kite</span><span>Claude</span><span>ChatGPT</span><span>…and more</span></div>
+</div></section>
+
+<section class="block"><div class="in">
+  <h2>My passwords stay with me</h2>
+  <p class="sub">I sign in once. agentio keeps the tokens encrypted.</p>
+  <div class="facts">
+    <div class="fact"><b>Encrypted vault</b><span>Tokens are encrypted on my machine (AES-256-GCM).</span></div>
+    <div class="fact"><b>My own hub</b><span>Agents on other machines get access from a hub I run.</span></div>
+    <div class="fact"><b>Works in CI</b><span>The same commands run in GitHub Actions.</span></div>
+  </div>
+</div></section>
+
+<section class="block"><div class="in mac">
+  <div>
+    <div class="head"><div class="appicon"><img src="/assets/icons/agentio.png" alt=""></div><div><h2 style="margin:0">Mac app</h2><span class="tag">Preview</span></div></div>
+    <ul>
+      <li>See every connected account in one window.</li>
+      <li>Find accounts that need a new sign-in.</li>
+      <li>Keeps agentio up to date.</li>
+    </ul>
+    <a class="btn btn-ink btn-lg" href="https://github.com/plosson/agentio-app/releases/latest">Download for Mac</a>
+    <p style="font-size:13px;color:var(--ink-2);margin:10px 0 0">macOS 14 or later.</p>
+  </div>
+  <div class="win">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div><b>agentio</b></div>
+    <div class="rows">
+      <div class="r"><span class="s" style="background:#ea4335">M</span><span class="n">Gmail · work<small>pa@company.com</small></span><span class="st">Connected</span></div>
+      <div class="r"><span class="s" style="background:#611f69">#</span><span class="n">Slack · team<small>company.slack.com</small></span><span class="st">Connected</span></div>
+      <div class="r"><span class="s" style="background:#25d366">W</span><span class="n">WhatsApp · personal<small>+32 4•• •• •• 12</small></span><span class="st">Connected</span></div>
+      <div class="r"><span class="s" style="background:#0c66e4">J</span><span class="n">JIRA · platform<small>company.atlassian.net</small></span><span class="st bad">Sign in again</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="block" id="install"><div class="in">
+  <details class="manual">
+    <summary>Install by hand</summary>
+<pre># macOS and Linux
+curl -LsSf https://houlahop.com/agentio/install | sh
+
+# Windows (PowerShell)
+iwr -useb https://houlahop.com/agentio/install.ps1 | iex
+
+# Homebrew
+brew tap plosson/agentio && brew install agentio</pre>
+  </details>
+</div></section>
+</div>
