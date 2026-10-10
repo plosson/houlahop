@@ -25,6 +25,58 @@ const STORIES = [
   ]
 },
 {
+  id: "vat", color: "#ef4f5f", tools: ["agentio"], agent: "Accounting agent", av: "A", title: "Everything my accountant needs for the VAT return",
+  chat: "Q3 VAT return",
+  hook: "One message. Invoices, bank statements and receipts come from Gmail, Falco, Revolut, Belfius and the OVH portal, and land in my accountant's Drive folder.",
+  svcs: ["gmail", "falco", "revolut", "belfius", "gdrive", "gsheets", "ovh"],
+  steps: [
+    { me: "my Q3 VAT return is due soon. gather every document my accountant needs: purchase and sales invoices, bank statements, receipts. put them in the Drive folder they shared with me", t: "10:20" },
+    { run: "agentio gmail search --query \"from:martin-co.example newer_than:30d\"", via: "agentio", out: "3 messages\nOct 1 · \"Q3 VAT: documents needed by Oct 10\" · Drive link" },
+    { ai: "Your accountant's Oct 1 email asks for the Q3 documents by **Oct 10**, in the Drive folder they shared in June. I'll follow its structure." },
+    { run: "agentio gdrive folders --parent 1Qx…", via: "agentio", out: "Purchases/ · Sales/ · Bank statements/" },
+    { run: "agentio falco peppol sync --since 2026-07-01 --extract-pdf --output q3/purchases", via: "agentio", out: "31 purchase invoices · 31 PDFs" },
+    { run: "agentio falco invoices sync --since 2026-07-01 --output q3/sales", via: "agentio", out: "14 sales invoices" },
+    { run: "agentio revolut transactions --from 2026-07-01 --to 2026-09-30 --format csv", via: "agentio", out: "412 transactions · 12 receipts downloaded" },
+    { run: "agentio gdrive put q3/… --folder <Purchases|Sales|Bank statements>", via: "agentio", out: "57 files uploaded · nothing overwritten" },
+    { ai: "Done 📂 **57 documents filed.** Still missing: two utility bills and a car lease invoice. I'll watch for them." },
+    { me: "now check that every payment from Belfius and Revolut has a receipt. one line per payment", t: "10:31" },
+    { run: "agentio gsheets create \"Bank reconciliation Q3\" --sheets Belfius,Revolut,Sources", via: "agentio", out: "✓ spreadsheet created" },
+    { run: "agentio gsheets get 1Bf… \"Belfius!A:F\"   (bank feed by Fintable)", via: "agentio", svc: ["gsheets", "fintable", "belfius"], out: "188 Belfius payments in Q3" },
+    { run: "agentio gmail search --query \"<merchant> <amount> after:2026/07/01\"   (×86, one per payment without a receipt)", via: "agentio", out: "79 receipts found → saved to Drive, linked in the sheet\n7 left: OVH invoices, only in the OVH customer portal" },
+    { pv: "sheet" },
+    { ai: "7 payments are **OVH** hosting invoices. They only live in the OVH customer portal. Sign me in through this secure form and I'll fetch them in my own browser 🔒" },
+    { pv: "ovhLogin" },
+    { me: "done", t: "10:44" },
+    { run: "manager.ovh.com → Billing → download Q3 invoices", via: "browser", svc: ["ovh"], out: "18 PDFs downloaded" },
+    { run: "agentio gdrive put invoices/*.pdf --folder <Purchases>", via: "agentio", out: "18 files uploaded · 7 payments justified" },
+    { ai: "Every payment now has a receipt or a comment ✅ I also filled a **Sources** tab: for each of 161 merchants, where to find the invoice next time. Next quarter will be much faster." },
+    { card: "57 documents filed, every payment justified, 18 invoices fetched from the OVH portal.", stats: ["gmail", "falco", "revolut", "belfius", "gdrive", "gsheets", "ovh"] },
+  ]
+},
+{
+  id: "booking", color: "#e86aa6", tools: ["agentio"], agent: "Errands agent", av: "E", title: "It books my slot on a real website",
+  chat: "Recycling park",
+  hook: "The agent signs in to a booking website in its own browser, picks the slot, and puts it in my calendar.",
+  svcs: ["gcal"],
+  steps: [
+    { me: "book me a slot at the recycling park, Saturday at noon", t: "09:12" },
+    { ai: "Sure. I'll do it on the park's booking website, in my own browser. I need your login: use this secure form, it never shows up in the chat 🔒" },
+    { pv: "parkLogin" },
+    { me: "done", t: "09:13" },
+    { run: "open the recycling park website → sign in", via: "browser", out: "✓ signed in" },
+    { run: "bookings → Saturday → 12:00 → confirm", via: "browser", out: "✓ \"Thank you for your reservation\"" },
+    { ai: "Booked ✅ **Saturday, 12:00 to 12:15**, at your usual park. Here's the confirmation 👇", t: "09:14" },
+    { pv: "booked" },
+    { me: "remember this, I go there all the time", t: "09:15" },
+    { run: "save: booking website, usual park, account (never the password)", via: "memory", out: "✓ saved" },
+    { ai: "Noted. Next time, just tell me the day and time." },
+    { me: "add it to my calendar", t: "09:16" },
+    { run: "agentio gcal create --summary \"Recycling park\" --from 2026-10-17T12:00:00+02:00 --to 2026-10-17T12:15:00+02:00 --send-updates none", via: "agentio", out: "✓ event created · no invites sent" },
+    { ai: "It's in your calendar 📅 Don't forget the old printer!" },
+    { card: "A slot booked on a real website and added to my calendar, in under a minute of my time.", stats: ["gcal"] },
+  ]
+},
+{
   id: "deals", color: "#5ec4b6", tools: ["agentio"], agent: "Deal agent", av: "D", title: "A deal room built in one morning",
   chat: "Buying a company in 2027",
   hook: "\"I want to buy a company in 2027.\" It scans the listing sites, then builds the tracker, one research file per company and the folder that holds them.",
@@ -74,33 +126,6 @@ const STORIES = [
     { card: "An email, a Dropbox folder and official sources → one page the family can read.", stats: ["gmail", "dropbox", "kite"] },
   ]
 },
-{
-  id: "accounts", color: "#ef4f5f", tools: ["agentio"], agent: "Accounting agent", av: "A", title: "The 6 AM accountant that learns my rules",
-  chat: "Account report",
-  hook: "Every invoice matched to a payment before I wake up. When a rule is wrong, I correct it in plain words.",
-  svcs: ["dropbox", "falco", "gsheets", "belfius", "revolut"],
-  steps: [
-    { me: "read the accounts-report skill in Dropbox and run it", t: "11:05" },
-    { run: "agentio dropbox download /Skills/accounts-report/SKILL.md", via: "agentio", out: "✓ skill loaded: sync, match, report, mark paid" },
-    { run: "agentio falco peppol sync --since 2026-01-01 --output falco/invoices", via: "agentio", out: "95 purchase invoices" },
-    { run: "agentio gsheets get 1Bf… \"Belfius!A:F\"   (bank feed by Fintable)", via: "agentio", svc: ["gsheets", "fintable", "belfius"], out: "1,204 bank movements" },
-    { run: "agentio revolut transactions --type card_payment --from 2026-01-01 --format csv", via: "agentio", out: "926 card payments" },
-    { run: "match invoice ↔ payment: reference, IBAN, name, amount, date", via: "task", out: "72 paid · 11 unpaid · 7 ambiguous" },
-    { run: "agentio dropbox put payment-status.md --path /Accounting/ --overwrite", via: "agentio", out: "✓ uploaded" },
-    { run: "agentio falco peppol mark-paid <ref>   (×72)", via: "agentio", out: "✓ 72 invoices marked Paid in Falco" },
-    { ai: "Report done 📊 **95 invoices · 72 paid · 11 unpaid · 7 ambiguous.**\nThe 7 ambiguous ones are monthly subscriptions with the same amount every month.", t: "11:12" },
-    { me: "that's silly. invoice on the 26th, payment on the 27th, obviously that's the match", t: "11:14" },
-    { ai: "Agreed. New rule: when only the amount matches, take the **closest date**." },
-    { ask: "Update the skill in your Dropbox?", desc: "The rule goes into SKILL.md, so every future run uses it.", options: ["Yes, update it", "Only for this run", "No"], pick: 0, t: "11:15" },
-    { run: "agentio dropbox put SKILL.md --path /Skills/accounts-report/ --overwrite", via: "agentio", out: "✓ rule added: nearest date wins" },
-    { run: "match again", via: "task", out: "79 paid · 11 unpaid · 0 ambiguous" },
-    { me: "run that every morning at 6", t: "11:16" },
-    { run: "\"Account report\" → every day at 6:00", via: "routine", out: "✓ routine created" },
-    { event: "Next day · 06:15" },
-    { ai: "☀️ Morning check: 2 new unpaid invoices arrived overnight, 1 old one is now paid. Nothing else changed.", t: "06:15" },
-    { card: "Every invoice matched to a payment before breakfast, with rules I fix in plain words.", stats: ["dropbox", "falco", "belfius", "revolut", "gsheets"] },
-  ]
-},
 ];
 
 // Grok Bot shows a shared link as a small card (title + domain) instead of a preview
@@ -108,7 +133,11 @@ const LINKS = {
   site: { title: "Hire better with AI", host: "hiring.northwind.studio" },
   tracker: { title: "Deal tracker", host: "docs.google.com" },
   kite: { title: "A private artifact", host: "Kite" },
+  sheet: { title: "Bank reconciliation Q3", host: "docs.google.com" },
 };
+
+// A secure form: the password goes to the agent and never appears in the chat
+const login = (logo, name) => `<div class="pv"><div class="secure"><b>🔒 Secure form · ${logo} ${name}</b><span style="color:#666;font-size:12px">The agent gets the password. It never appears in the chat.</span><div class="f">email ··········</div><div class="f">password ●●●●●●●●●●</div><span class="ok">Sent ✓</span></div></div>`
 
 const PREVIEWS = {
   site: () => `<div class="pv"><div class="url">🔒 <i>hiring.northwind.studio</i></div>
@@ -123,4 +152,14 @@ const PREVIEWS = {
   kite: () => `<div class="pv"><div class="url">${ico("kite")}<i>Mary's health cover · private</i></div><div class="kite">
     <b>Medicare for dummies</b><div class="abcd"><span><em>A</em>Hospital</span><span><em>B</em>Doctors</span><span><em>C</em>All-in-one plans</span><span><em>D</em>Drugs</span></div>
     <div class="paths"><div><small>Path 1 · today</small>HMO-style plan + Belgian policy</div><div><small>Path 2 · proposed</small>Original Medicare + Plan G + Part D</div></div></div></div>`,
+  sheet: () => `<div class="pv"><div class="pvh">${ico("gsheets")}Bank reconciliation Q3</div><div class="tabs"><span class="on">Belfius</span><span>Revolut</span><span>Sources</span></div><div class="sheet s4">
+    <div class="r h"><span>Date</span><span>Merchant</span><span>Amount</span><span>Receipt / comment</span></div>
+    <div class="r g"><span>07-03</span><span>Office supplies</span><span>-42.10</span><span>receipt ↗</span></div>
+    <div class="r g"><span>07-08</span><span>SNCB train tickets</span><span>-86.00</span><span>receipt ↗</span></div>
+    <div class="r y"><span>07-11</span><span>Transfer to Revolut</span><span>-500.00</span><span>internal transfer, no receipt</span></div>
+    <div class="r g"><span>07-15</span><span>Software licence</span><span>-29.00</span><span>receipt ↗</span></div>
+    <div class="r"><span>07-19</span><span>OVH</span><span>-24.19</span><span>in the OVH portal…</span></div></div></div>`,
+  ovhLogin: () => login(ico("ovh"), "OVH sign-in"),
+  parkLogin: () => login("♻️", "Recycling park sign-in"),
+  booked: () => `<div class="pv"><div class="url">🔒 <i>Recycling park · bookings</i></div><div class="booked"><b>✓ Thank you for your reservation</b><span>Saturday · 12:00 to 12:15</span><span>Your usual park · bring your ID card</span></div></div>`,
 };

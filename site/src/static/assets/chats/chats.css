@@ -75,6 +75,7 @@
   .chats .tool[data-via="browser"] .cmd::before { content: "browser · "; opacity: .6; }
   .chats .tool[data-via="task"] .cmd::before { content: "sub-agent · "; opacity: .6; }
   .chats .tool[data-via="routine"] .cmd::before { content: "routine · "; opacity: .6; }
+  .chats .tool[data-via="memory"] .cmd::before { content: "memory · "; opacity: .6; }
 
   .chats .event { align-self: center; font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 999px; animation: pop .25s ease-out; }
 
@@ -109,7 +110,14 @@
   .chats .win .tool.haslogo .ic { display: none; }
   .chats .card .stats span { display: inline-flex; align-items: center; gap: 6px; }
   .chats .pvh { display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; font-weight: 600; border-bottom: 1px solid #eee; }
-  .chats .sheet .r { display: grid; grid-template-columns: 1.3fr 1.1fr .6fr .7fr .8fr; border-bottom: 1px solid #eee; }
+  .chats .sheet .r { display: grid; border-bottom: 1px solid #eee; }
+  .chats .sheet.s4 .r { grid-template-columns: 70px 1fr 64px 1fr; }
+  .chats .sheet.s5 .r { grid-template-columns: 1.3fr 1.1fr .6fr .7fr .8fr; }
+  .chats .secure { padding: 16px; display: grid; gap: 8px; font-size: 13px; }
+  .chats .secure b { font-size: 14px; } .chats .secure .f { background: #f2f2f4; border-radius: 8px; padding: 8px 10px; color: #666; font-family: var(--mono); font-size: 12px; }
+  .chats .secure .ok { justify-self: start; background: #1d1d1f; color: #fff; border-radius: 999px; padding: 5px 14px; font-size: 12px; font-weight: 600; }
+  .chats .booked { padding: 16px; display: grid; gap: 4px; font-size: 13px; color: #555; }
+  .chats .booked b { font-size: 15px; color: #188038; }
   .chats .sheet .lk { color: #1a73e8; display: inline-flex; gap: 4px; align-items: center; } .chats .sheet .lk .lg { width: 12px; height: 12px; }
   .chats .kite { padding: 14px; display: grid; gap: 10px; font-size: 12.5px; }
   .chats .kite b { font-size: 16px; letter-spacing: -.02em; }
