@@ -6,12 +6,12 @@ const LOGOS = "/assets/chats/logos/"
 const ICONS = {
   gmail: LOGOS + "gmail.svg", gdrive: LOGOS + "gdrive.svg", gsheets: LOGOS + "gsheets.svg", gdocs: LOGOS + "gdocs.svg",
   github: LOGOS + "github.svg", dropbox: LOGOS + "dropbox.svg", revolut: LOGOS + "revolut.svg", belfius: LOGOS + "belfius.png",
-  falco: LOGOS + "falco.png", fintable: LOGOS + "fintable.svg", kite: LOGOS + "kite.svg", firecrawl: LOGOS + "firecrawl.svg",
+  falco: LOGOS + "falco.png", ovh: LOGOS + "ovh.svg", gcal: LOGOS + "gcal.svg", fintable: LOGOS + "fintable.svg", kite: LOGOS + "kite.svg", firecrawl: LOGOS + "firecrawl.svg",
   claude: LOGOS + "claude.svg", chatgpt: LOGOS + "chatgpt.svg",
   siteio: "/assets/icons/siteio.svg", agentio: "/assets/icons/agentio.png",
 }
 const NAMES = { gmail: "Gmail", gdrive: "Google Drive", gsheets: "Google Sheets", gdocs: "Google Docs", github: "GitHub",
-  dropbox: "Dropbox", revolut: "Revolut", belfius: "Belfius", falco: "Falco", fintable: "Fintable", kite: "Kite",
+  dropbox: "Dropbox", revolut: "Revolut", belfius: "Belfius", falco: "Falco", ovh: "OVHcloud", gcal: "Google Calendar", fintable: "Fintable", kite: "Kite",
   firecrawl: "Firecrawl", siteio: "siteio", agentio: "agentio" }
 
 // The Grok Bot avatar: a rounded blob with two eyes, in the agent's colour
@@ -152,7 +152,6 @@ function mount(root) {
     root.querySelectorAll(".pick").forEach((b) => b.classList.toggle("on", b.dataset.id === story.id))
     const progress = $(".progress i"), total = story.steps.length
     try {
-      await wait(500)
       for (let i = 0; i < total; i++) {
         const s = story.steps[i]
         progress.style.width = `${(i / total) * 100}%`
@@ -160,7 +159,8 @@ function mount(root) {
           const e = document.createElement("div"); e.className = "event"; e.innerHTML = `<span>${esc(s.event)}</span>`
           add(e); lastWho = null; await wait(700)
         } else if (s.me) {
-          await typeComposer(s.me)
+          // the opening message is already sent when the chat starts: no need to look down at the composer
+          if (i > 0) await typeComposer(s.me)
           row("me").innerHTML = md(s.me)
           await wait(600)
         } else if (s.ai) {
