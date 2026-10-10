@@ -9,7 +9,7 @@ const TOOLS = [
   { slug: "pagerio", icon: "/assets/icons/pagerio.png" },
 ] as const
 const ACTIVE = new Set(["home", "utilities", ...TOOLS.map((t) => t.slug)])
-const FORBIDDEN = [/siteio\.houlahop\.com/i, /agentio\.houlahop\.com/i, /falcio/i]
+const FORBIDDEN = [/siteio\.houlahop\.com/i, /agentio\.houlahop\.com/i, /falcio/i, /hex[\s-]?rays/i]
 // https://houlahop.com/<path> written as text (prompts, <pre>, .md); ends at whitespace, quote, <, ), | or backtick
 const SELF_URL = /https:\/\/houlahop\.com(\/[^\s"'<)|`]*)?/g
 const TEXT_EXT = /\.(html|css|js|md|svg|txt|ps1)$|\/install$/

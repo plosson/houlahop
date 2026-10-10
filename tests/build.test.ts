@@ -92,6 +92,12 @@ describe("checkOutput", () => {
     await writeFile(join(dist, "index.html"), "<p>falcio</p>")
     expect((await checkOutput(dist)).join()).toContain("falcio")
   })
+  test("flags a mention of Hex-Rays, however it is written", async () => {
+    for (const name of ["Hex-Rays", "hexrays", "HEX RAYS"]) {
+      await writeFile(join(dist, "index.html"), `<p>${name}</p>`)
+      expect((await checkOutput(dist)).join()).toContain("hex")
+    }
+  })
   test("flags a broken internal link", async () => {
     await writeFile(join(dist, "index.html"), '<a href="/siteio/instal">x</a>')
     expect((await checkOutput(dist)).join()).toContain("/siteio/instal")

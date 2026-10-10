@@ -16,3 +16,5 @@ A push to `main` that touches `site/src/**`, `scripts/build.ts`, `package.json` 
 When a tool changes its install steps, update its files here, not in the tool repo.
 
 To add a utility: one row in the Utilities list in `site/src/pages/index.html`, one page in `site/src/pages/<name>/index.html` with `active: utilities`, and its icon in `site/src/static/assets/icons/`.
+
+The animated chats on the agentio and siteio pages: stories in `site/src/static/assets/chats/stories.js`, picked per page with `data-stories`. Names and numbers in them are made up; `bun test` checks they mention nothing personal.
