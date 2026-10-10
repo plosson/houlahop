@@ -105,7 +105,17 @@ function mount(root) {
     })
   }
   const scrollDown = () => { scroller.scrollTop = scroller.scrollHeight }
-  const add = (el) => { col.appendChild(el); scrollDown(); return el }
+  // Grok Bot hides tool steps: while they run, the agent shows "…" in the chat instead (see chats.css)
+  const working = document.createElement("div")
+  working.className = "row ai working"
+  working.innerHTML = `<div class="body"><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>`
+  const add = (el) => {
+    if (!el.classList.contains("tool")) working.remove()
+    // tool steps go in before the dots, so the dots stay last without restarting their animation
+    col.insertBefore(el, working.isConnected ? working : null)
+    if (el.classList.contains("tool") && !working.isConnected) col.appendChild(working)
+    scrollDown(); return el
+  }
 
   function row(who) {
     const el = document.createElement("div")
@@ -232,11 +242,11 @@ function mount(root) {
   let saved = null; try { saved = localStorage.getItem("hh-skin") } catch {}
   setSkin(SKINS.some((s) => s.id === saved) ? saved : "claude")
   setHead()
-  // start the first chat only when it scrolls into view
+  // start the first chat only when it scrolls into view, unless a click already started one
   new IntersectionObserver((entries, observer) => {
     if (!entries.some((en) => en.isIntersecting)) return
     observer.disconnect()
-    play(stories[0])
+    if (run === 0) play(stories[0])
   }, { threshold: 0.3 }).observe(win)
 }
 
