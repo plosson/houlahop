@@ -186,6 +186,11 @@
   .chats [data-skin="grok"] .bub blockquote { border-left: 3px solid #c8c8c8; font-style: normal; color: #6e6e73; opacity: 1; }
   /* Grok Bot behaves like a human: it never shows its tool steps */
   .chats [data-skin="grok"] .tool { display: none; }
+  .chats .working { display: none; }
+  .chats [data-skin="grok"] .working { display: flex; }
+  .chats [data-skin="grok"] .working .body { flex: 0 0 auto; }
+  .chats [data-skin="grok"] .working .typing i { background: #8e8e93; }
+  .chats .win[data-skin="grok"] ~ .progress { visibility: hidden; }
   .chats .lcard { display: none; }
   .chats [data-skin="grok"] .pv.haslink { display: none; }
   .chats [data-skin="grok"] .lcard { display: flex; align-self: flex-start; align-items: center; gap: 16px; max-width: 78%; padding: 14px 22px; background: #fff; border-radius: 18px; box-shadow: 0 0 0 1px rgba(0,0,0,.09); animation: pop .3s ease-out; }
