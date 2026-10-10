@@ -19,8 +19,13 @@
   .chats .ctl { margin-left: auto; display: flex; gap: 6px; }
   .chats .ctl button { font: inherit; font-size: 13px; font-weight: 500; height: 32px; padding: 0 12px; border-radius: 999px; border: 0; background: var(--fill); cursor: pointer; color: var(--ink); }
   .chats .ctl button:hover { background: #ececf0; }
-  .chats .progress { height: 3px; background: var(--fill); border-radius: 3px; overflow: hidden; margin-top: 14px; }
-  .chats .progress i { display: block; height: 100%; width: 0; background: var(--tint-ink); transition: width .4s; }
+  /* the progress bar is a slider: a tall hit area around a thin track, with a knob */
+  .chats .progress { position: relative; height: 20px; margin-top: 6px; cursor: pointer; touch-action: none; outline: none; }
+  .chats .progress::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 4px; border-radius: 4px; background: var(--fill); }
+  .chats .progress i { position: absolute; left: 0; top: 8px; height: 4px; width: 0; border-radius: 4px; background: var(--tint-ink); transition: width .4s; }
+  .chats .progress i::after { content: ""; position: absolute; right: -7px; top: -5px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--tint-ink), 0 1px 4px rgba(0,0,0,.2); transition: transform .15s; }
+  .chats .progress:hover i::after, .chats .progress.drag i::after, .chats .progress:focus-visible i::after { transform: scale(1.25); }
+  .chats .progress.drag i { transition: none; }
   .chats .hook { margin: 14px 2px 0; font-size: 15px; color: var(--ink-2); }
   .chats .cmds { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
   .chats .cmds code { font-size: 12px; background: var(--tint); color: var(--tint-ink); padding: 4px 9px; border-radius: 8px; }

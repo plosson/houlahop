@@ -83,21 +83,23 @@ function mount(root) {
       <div class="scroll"><div class="col"></div></div>
       <div class="comp"><div class="box"><span class="plus">+</span><span class="txt"></span><span class="mic">${MIC}</span><span class="send" aria-hidden="true"><span>↑</span>${WAVE}</span></div></div>
     </div>
-    <div class="progress"><i></i></div>
+    <div class="progress" role="slider" tabindex="0" aria-label="Position in the chat" aria-valuemin="0"><i></i></div>
     <p class="hook"></p>
     <div class="cmds"></div>`
   const $ = (sel) => root.querySelector(sel)
   const win = $(".win"), col = $(".col"), scroller = $(".scroll"), composer = $(".comp .txt")
 
   let skin = "claude", current = stories[0], run = 0, paused = false, speed = 1, lastWho = null
+  // fast: steps before the point someone dragged the progress bar to are drawn at once
+  let fast = false, at = 0
 
   function wait(ms) {
     const my = run
     return new Promise((resolve, reject) => {
-      let left = reduced ? 0 : ms / speed
+      let left = reduced || fast ? 0 : ms / speed
       const tick = () => {
         if (my !== run) return reject("cancel")
-        if (paused) return setTimeout(tick, 100)
+        if (paused && !fast) return setTimeout(tick, 100)
         if (left <= 0) return resolve()
         const step = Math.min(left, 50); left -= step; setTimeout(tick, step)
       }
@@ -126,6 +128,7 @@ function mount(root) {
   }
 
   async function typeComposer(text) {
+    if (fast) return
     const per = Math.max(12, Math.min(35, 1600 / text.length))
     for (let i = 1; i <= text.length; i++) { composer.textContent = text.slice(0, i); await wait(per) }
     await wait(350)
@@ -150,9 +153,12 @@ function mount(root) {
     scrollDown()
   }
 
-  async function play(story) {
+  // from: the step to play from, after drawing the ones before it at once.
+  // A drag on the progress bar keeps a paused chat paused.
+  async function play(story, from = 0, seeking = false) {
     const my = ++run
-    current = story; lastWho = null; paused = false; $("[data-pause]").textContent = "Pause"
+    current = story; lastWho = null
+    if (!seeking) { paused = false; $("[data-pause]").textContent = "Pause" }
     col.innerHTML = ""; composer.textContent = ""
     setHead()
     $(".hook").textContent = story.hook
@@ -160,11 +166,14 @@ function mount(root) {
     story.steps.filter((s) => s.via === "agentio" || s.via === "siteio").forEach((s) => cmds.set(s.run.split(" ").slice(0, 3).join(" "), svcOf(s)))
     $(".cmds").innerHTML = [...cmds].map(([c, v]) => `<code>${v.map(ico).join("")}${esc(c)}</code>`).join("")
     root.querySelectorAll(".pick").forEach((b) => b.classList.toggle("on", b.dataset.id === story.id))
-    const progress = $(".progress i"), total = story.steps.length
+    const bar = $(".progress"), progress = bar.querySelector("i"), total = story.steps.length
+    bar.setAttribute("aria-valuemax", total)
     try {
       for (let i = 0; i < total; i++) {
         const s = story.steps[i]
+        at = i; fast = i < from
         progress.style.width = `${(i / total) * 100}%`
+        bar.setAttribute("aria-valuenow", i)
         if (s.event) {
           const e = document.createElement("div"); e.className = "event"; e.innerHTML = `<span>${esc(s.event)}</span>`
           add(e); lastWho = null; await wait(700)
@@ -178,7 +187,7 @@ function mount(root) {
           b.innerHTML = `<span class="typing"><i></i><i></i><i></i></span>`; scrollDown()
           await wait(700)
           const words = s.ai.split(/(\s+)/)
-          for (let w = 1; w <= words.length; w += 2) { b.innerHTML = md(words.slice(0, w).join("")); scrollDown(); await wait(28) }
+          for (let w = 1; w <= words.length && !fast; w += 2) { b.innerHTML = md(words.slice(0, w).join("")); scrollDown(); await wait(28) }
           b.innerHTML = md(s.ai); scrollDown()
           await wait(Math.min(2600, 500 + s.ai.length * 12))
         } else if (s.run) {
@@ -189,7 +198,7 @@ function mount(root) {
           add(el)
           const cmd = el.querySelector(".cmd")
           const per = Math.max(6, Math.min(18, 700 / s.run.length))
-          for (let k = 1; k <= s.run.length; k += 2) { cmd.textContent = s.run.slice(0, k); await wait(per) }
+          for (let k = 1; k <= s.run.length && !fast; k += 2) { cmd.textContent = s.run.slice(0, k); await wait(per) }
           cmd.textContent = s.run; cmd.title = s.run
           await wait(skin === "grok" ? 250 : 650)
           el.querySelector(".out").textContent = s.out
@@ -226,7 +235,9 @@ function mount(root) {
           add(c)
         }
       }
+      at = total; fast = false
       progress.style.width = "100%"
+      bar.setAttribute("aria-valuenow", total)
     } catch (e) { if (e !== "cancel") throw e }
   }
 
@@ -237,6 +248,27 @@ function mount(root) {
     else if ("replay" in t.dataset) play(current)
     else if ("pause" in t.dataset) { paused = !paused; t.textContent = paused ? "Play" : "Pause" }
     else if ("speed" in t.dataset) { speed = speed === 1 ? 2 : speed === 2 ? 4 : 1; t.textContent = speed + "×" }
+  })
+
+  // drag the progress bar, or use the arrow keys, to move through the chat
+  const bar = $(".progress")
+  const seekTo = (step) => {
+    step = Math.max(0, Math.min(current.steps.length, step))
+    if (step !== at || fast) play(current, step, true)
+  }
+  const seekAt = (e) => {
+    const r = bar.getBoundingClientRect()
+    seekTo(Math.round(((e.clientX - r.left) / r.width) * current.steps.length))
+  }
+  bar.addEventListener("pointerdown", (e) => { bar.setPointerCapture(e.pointerId); bar.classList.add("drag"); seekAt(e) })
+  bar.addEventListener("pointermove", (e) => { if (bar.hasPointerCapture(e.pointerId)) seekAt(e) })
+  bar.addEventListener("pointerup", () => bar.classList.remove("drag"))
+  bar.addEventListener("pointercancel", () => bar.classList.remove("drag"))
+  bar.addEventListener("keydown", (e) => {
+    const move = { ArrowLeft: -1, ArrowRight: 1, Home: -Infinity, End: Infinity }[e.key]
+    if (move === undefined) return
+    e.preventDefault()
+    seekTo(at + move)
   })
 
   let saved = null; try { saved = localStorage.getItem("hh-skin") } catch {}
